@@ -1,17 +1,9 @@
-from fsm import *
-import pygame
-pygame.init()
+from fsm import FSM
+from settings import *
+from statea import StateA
 
-WIDTH, HEIGHT = 700, 500
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("PiPet")
-
-FPS = 60
-
-WHITE = (255, 255, 255)
-BLACK = (0, 0, 0)
-
-COMIC_SANS = pygame.font.SysFont("comicsans", 50)
 
 
 def main():
