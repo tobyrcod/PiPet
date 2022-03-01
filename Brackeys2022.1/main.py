@@ -1,9 +1,9 @@
-from fsm import FSM
 from settings import *
-from statea import StateA
-
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("PiPet")
+
+from fsm import FSM
+from statea import StateA
 
 
 def main():

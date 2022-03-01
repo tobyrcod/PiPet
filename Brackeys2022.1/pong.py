@@ -7,10 +7,10 @@ SCORE_COLOUR = (106, 164, 148)
 PADDLE_WIDTH, PADDLE_HEIGHT = 20, 100
 BALL_RADIUS = 8
 
-SPRITE_EGG = pygame.image.load('Pong/egg.png')
-SPRITE_CHICKEN = pygame.image.load('Pong/chicken_paddle.png')
-SPRITE_BG = pygame.image.load('Pong/bg_grass.png')
-SPRITE_GRASS = pygame.image.load('Pong/grass.png')
+SPRITE_EGG = pygame.image.load('Pong/egg.png').convert_alpha()
+SPRITE_CHICKEN = pygame.image.load('Pong/chicken_paddle.png').convert_alpha()
+SPRITE_BG = pygame.image.load('Pong/bg_grass.png').convert_alpha()
+SPRITE_GRASS = pygame.image.load('Pong/grass.png').convert_alpha()
 
 SCORE_FONT = COMIC_SANS
 
