@@ -32,8 +32,9 @@ class Bar:
         g, b, b, b, b, b, b, g,
         b, b, b, b, b, b, b, b
         ]
+        self.animation = dispCont.Animation()
 
-        dispCont.load_Animations(filepath = "./DisplayController/animations.json")
+        self.animation.load_animations(filepath = "./DisplayController/animations.json")
         #loads all animations at the start of the game
 
         #can you habe a method in the init? if not we read from the json files settings nad animation
@@ -50,7 +51,7 @@ class Bar:
         #amount param = by how much this bar should go down by (could be different in various games)
 
         #CHANGE IN ANIMATION
-        dispCont.reaction(animName)  #with the new animation name as a param
+        self.animation.reaction(animName)  #with the new animation name as a param
         
 
 

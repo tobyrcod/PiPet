@@ -12,7 +12,7 @@ class Ball:
         #info to send into funct. file
         #which side won the point
         #by how much the point is lost (so by how much the health bar goes down by)
-        bar.health_bar(pointSide, 1, "shock")
+        bar.health_bar(pointSide, 1, "test1")
 
         self.ball.center = (screenWidth / 2, screenHeight / 2)
         self.ballSpeedX *= random.choice((1,-1))

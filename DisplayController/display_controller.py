@@ -84,6 +84,8 @@ class Animation:
             
         print(self.faces)   #this all works yay
 
+        file.close()
+
         ####################################
 
     def reaction(self, animName):
@@ -113,6 +115,32 @@ class Animation:
 
         sleep(delay)    #just to offset the current display delay
 
+        #so the sense hat is just reading the integers in the array so we need to directly extract/map keys to colours
+
+        activeFrames = []
+        #convert the colour dictionary to rgb arrays in each position in frame
+        #so just do like .replace for each character
+        #for each character replace it with the rgb code etc
+
+        colours = []    #extracting used colours
+        print(self.colourVals)
+
+        for entry in self.colourVals:
+            colours.append([entry["key"], entry["value"]])
+
+        print(colours)
+
+        for face in self.faces:
+            for i in range(len(face)):  #might need to be for i in range face[i]
+                for colour in colours:
+                    if face[i] == colour[0]: #if index value == a key 
+                        face[i] = colour[1]   #replace it with he rgb value
+                        break   #no need to check the other colours :)
+        print(self.faces)
+
+        s.clear()
+            
+
         for i in range(reps):  #reps = how many times the order is repeated
             #go through the order however many repetitions there another
             for index in order:
@@ -120,16 +148,14 @@ class Animation:
                 s.set_pixels(self.faces[index]) #setting the frame to show up on the pipet
                 sleep(delay) #how long to keep the frame for
 
-        #MAIN QUESTION ! WILL the sense hat refer to the dictionaries of colour values?
-        #or will i need to extract any used colours into a smaller dictionary of just key and colour
-        #just so it has something to reference to in this method
+        s.clear()
 
-        #after this is done - the animation has completed
+    
         
 
 
-newAnim = Animation()
-newAnim.load_animations("animations.json")
-newAnim.reaction("te22st1")
+# newAnim = Animation()
+# newAnim.load_animations("animations.json")
+# newAnim.reaction("test1")
 
    
