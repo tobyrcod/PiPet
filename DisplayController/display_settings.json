@@ -1,0 +1,14 @@
+{
+  "color_values": [
+    {
+      "key": 0,
+      "value": [255, 255, 255],
+      "name": "white"
+    },
+    {
+      "key": 1,
+      "value": [255, 0, 0],
+      "name": "red"
+    }
+  
+}

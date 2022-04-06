@@ -1,4 +1,5 @@
 import pygame, sys, random
+import functionality as funct
 
 class Ball:
     def __init__(self):
@@ -6,7 +7,13 @@ class Ball:
         self.ballSpeedX = 7 * random.choice((1,-1))
         self.ballSpeedY = 7 * random.choice((1,-1))
 
-    def ball_start(self):
+    def ball_start(self, pointSide):
+        #########################################
+        #info to send into funct. file
+        #which side won the point
+        #by how much the point is lost (so by how much the health bar goes down by)
+        bar.health_bar(pointSide, 1, "shock")
+
         self.ball.center = (screenWidth / 2, screenHeight / 2)
         self.ballSpeedX *= random.choice((1,-1))
         self.ballSpeedY *= random.choice((1,-1))
@@ -43,12 +50,12 @@ def ball_animation():
 
     #player score 
     if b.ball.left <= 0:
-        b.ball_start()
+        b.ball_start('R')
         stick.playerScore += 1
 
     #opponent score
     if b.ball.right >= screenWidth:
-        b.ball_start()
+        b.ball_start('L')
         stick.opponentScore += 1
 
     if b.ball.colliderect(stick.player) or b.ball.colliderect(stick.opponent):
@@ -69,8 +76,6 @@ def opponent_ai():     ##so its based on what position the ball is on the screen
         stick.opponent.bottom = screenHeight
 
 
-
-
 #general setup
 pygame.init()
 clock = pygame.time.Clock()
@@ -87,19 +92,7 @@ game_font = pygame.font.Font("freesansbold.ttf", 32)
 bg_colour = pygame.Color("grey12")
 light_grey = (200, 200, 200)
 
-# Game Rectangles
-#ball = pygame.Rect(screenWidth / 2 - 15, screenHeight / 2 - 15, 30, 30)
-#player = pygame.Rect(screenWidth - 20, screenHeight / 2 - 70, 10,140)
-#opponent = pygame.Rect(10, screenHeight / 2 - 70, 10,140)
-
-#ballSpeedX = 7 * random.choice((1,-1))
-#ballSpeedY = 7 * random.choice((1,-1))
-#playerSpeed = 0
-#opponentSpeed = 7
-
-#score text
-#playerScore = 0
-#opponentScore = 0
+bar = funct.Bar(10)   #creating an instance of the health bar on the sense hat
 
 #class initiation
 b = Ball()

@@ -97,7 +97,7 @@ def random():#may work in actual environment, as its a browser, may not import a
       rand3 = random.randint(0, 255)
       r_colour = (rand1, rand2, rand3)
   
-      rand_face.append(rand)
+      #rand_face.append(rand)
       
     s.set_pixels(rand_face)
     sleep(0.5)
