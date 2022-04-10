@@ -29,6 +29,13 @@ def draw(win, grid):
                     PIXEL_SIZE, PIXEL_SIZE  # the size of the cell
                 ))
 
+        if DRAW_GRID_LINES:
+            for i in range(0, ROWS + 1):
+                pygame.draw.line(WIN, BLACK, (0, i * PIXEL_SIZE), (WIDTH, i * PIXEL_SIZE))
+
+            for i in range(0, COLS + 1):
+                pygame.draw.line(WIN, BLACK, (i * PIXEL_SIZE, 0), (i * PIXEL_SIZE, HEIGHT - TOOLBAR_HEIGHT))
+
     win.fill(BG_COLOR)
     draw_grid(WIN, grid)
     pygame.display.update()
