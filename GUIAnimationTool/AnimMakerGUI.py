@@ -37,7 +37,7 @@ def get_coord_from_pos(pos):
 # TODO: Draw the grid to a different canvas instead of directly to the main display TODO?: Instead of redrawing the
 #  whole grid just redraw the pixels (if any) that change this frame. '?' because this is just for optimisation,
 #  and realistically that doesn't matter at all for this simple use case
-def draw(win, grid):
+def draw(win, grid, buttons):
     def draw_grid(WIN, grid):
         for y, row in enumerate(grid):
             for x, cell_color in enumerate(row):
@@ -55,14 +55,27 @@ def draw(win, grid):
 
     win.fill(BG_COLOR)
     draw_grid(WIN, grid)
+
+    for button in buttons:
+        button.draw(WIN)
+
     pygame.display.update()
 
 
 # Main game Loop
 def main():
 
-    grid = init_grid(ROWS, COLS, BLUE)
+    grid = init_grid(ROWS, COLS, WHITE)
     draw_color = BLACK
+
+    button_y = HEIGHT - TOOLBAR_HEIGHT / 2 - 25
+    buttons = [
+        Button(10, button_y, 50, 50, BLACK),
+        Button(70, button_y, 50, 50, RED),
+        Button(130, button_y, 50, 50, GREEN),
+        Button(190, button_y, 50, 50, BLUE),
+        Button(250, button_y, 50, 50, WHITE, "Erase", BLACK),
+    ]
 
     run = True
     while run:
@@ -75,10 +88,18 @@ def main():
                 mouse_pos = pygame.mouse.get_pos()
                 coord = get_coord_from_pos(mouse_pos)
 
-                if coord is not None:
+                if coord is None:
+                    # Clicked in the toolbar
+                    for button in buttons:
+                        if not button.clicked(mouse_pos):
+                            continue
+
+                        draw_color = button.color
+                else:
+                    # Clicked on the canvas
                     grid[coord.y][coord.x] = draw_color
 
-        draw(WIN, grid)
+        draw(WIN, grid, buttons)
 
     pygame.quit()
 

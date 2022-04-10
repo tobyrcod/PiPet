@@ -1,4 +1,5 @@
 import pygame
+from collections import namedtuple
 pygame.init()
 pygame.font.init()
 
@@ -22,6 +23,7 @@ DRAW_GRID_LINES = True
 
 # Other
 FONT_NAME = "Ariel"
+Vector2 = namedtuple('Vector2', 'x y')
 
 
 # Methods
