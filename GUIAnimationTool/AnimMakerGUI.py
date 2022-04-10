@@ -2,6 +2,8 @@
 # https://www.youtube.com/watch?v=N20eXcfyQ_4
 from utils import *
 
+# TODO: Change application icon
+
 # Pygame variables
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("PiPet Animation Maker")
@@ -19,7 +21,22 @@ def init_grid(rows, cols, start_color):
     return grid
 
 
-# TODO: Draw the grid to a different canvas instead of directly to the main display
+def get_coord_from_pos(pos):
+    x, y = pos
+    coord = Vector2(x // PIXEL_SIZE, y // PIXEL_SIZE)
+
+    if coord.x < 0 or coord.x >= COLS:
+        return None
+
+    if coord.y < 0 or coord.y >= ROWS:
+        return None
+
+    return coord
+
+
+# TODO: Draw the grid to a different canvas instead of directly to the main display TODO?: Instead of redrawing the
+#  whole grid just redraw the pixels (if any) that change this frame. '?' because this is just for optimisation,
+#  and realistically that doesn't matter at all for this simple use case
 def draw(win, grid):
     def draw_grid(WIN, grid):
         for y, row in enumerate(grid):
@@ -45,6 +62,7 @@ def draw(win, grid):
 def main():
 
     grid = init_grid(ROWS, COLS, BLUE)
+    draw_color = BLACK
 
     run = True
     while run:
@@ -52,6 +70,13 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
+
+            if pygame.mouse.get_pressed()[0]:  # if the left mouse button is clicked
+                mouse_pos = pygame.mouse.get_pos()
+                coord = get_coord_from_pos(mouse_pos)
+
+                if coord is not None:
+                    grid[coord.y][coord.x] = draw_color
 
         draw(WIN, grid)
 
