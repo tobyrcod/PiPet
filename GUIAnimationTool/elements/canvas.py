@@ -1,6 +1,7 @@
 from utils import *
 
 
+# TODO: Upgrade to use frames instead of handling the grid directly
 class Canvas:
     def __init__(self, rect):
         self.rect = rect
