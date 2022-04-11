@@ -1,26 +1,19 @@
 from utils import *
+from .frame import Frame
 
 
-# TODO: Upgrade to use frames instead of handling the grid directly
+# TODO: Upgrade to use frames instead of handling the grid directly, i.e make the canvas display the frames that are
+#  in the animator, not the other way round
 class Canvas:
-    def __init__(self, rect):
+    def __init__(self, rect, frame):
         self.rect = rect
         self.draw_color = BLACK
-        self.grid = self.init_grid(ROWS, COLS, WHITE)
-
-    def init_grid(self, rows, cols, start_color):
-        grid = []
-
-        for i in range(0, rows):
-            grid.append([])
-            for _ in range(0, cols):
-                grid[i].append(start_color)
-
-        return grid
+        self.frame = frame
+        self.pixel_size = rect.width // frame.rows
 
     def get_coord_from_pos(self, pos):
         x, y = pos
-        coord = Vector2(x // PIXEL_SIZE, y // PIXEL_SIZE)
+        coord = Vector2(x // self.pixel_size, y // self.pixel_size)
 
         if coord.x < 0 or coord.x >= COLS:
             return None
@@ -30,48 +23,25 @@ class Canvas:
 
         return coord
 
-    def paint_pixel(self, x, y):
-        self.grid[y][x] = self.draw_color
-
     # I hate this button argument please fix it...
     # it should be color
     def change_draw_color(self, color):
         self.draw_color = color
 
-    def reset(self):
+    def clear(self):
         self.draw_color = BLACK
-        self.grid = self.init_grid(ROWS, COLS, WHITE)
+        self.frame.clear()
 
     def clicked(self, mouse_pos):
         local_pos = np.subtract(mouse_pos, self.rect.topleft)
         coord = self.get_coord_from_pos(local_pos)
         # Clicked on the canvas
-        self.paint_pixel(*coord)
+        self.frame.paint_pixel(*coord, self.draw_color)
 
     def get_surface(self):
-
-        width, height = self.rect.size
         canvas_surface = pygame.Surface(self.rect.size)
 
-        for y, row in enumerate(self.grid):
-            for x, cell_color in enumerate(row):
-                pygame.draw.rect(canvas_surface, cell_color, (
-                    x * PIXEL_SIZE, y * PIXEL_SIZE,  # (x, y) position of the cell
-                    PIXEL_SIZE, PIXEL_SIZE  # the size of the cell
-                ))
-
-        if DRAW_GRID_LINES:
-            for i in range(0, ROWS + 1):
-                pygame.draw.line(canvas_surface, BLACK, (0, i * PIXEL_SIZE + GRID_LINE_WIDTH / 2),
-                                 (width, i * PIXEL_SIZE + GRID_LINE_WIDTH / 2), GRID_LINE_WIDTH)
-            i = ROWS
-            pygame.draw.line(canvas_surface, BLACK, (0, i * PIXEL_SIZE - GRID_LINE_WIDTH / 2),
-                             (width, i * PIXEL_SIZE - GRID_LINE_WIDTH / 2), GRID_LINE_WIDTH)
-
-            for i in range(0, COLS):
-                pygame.draw.line(canvas_surface, BLACK, (i * PIXEL_SIZE + GRID_LINE_WIDTH / 2, 0),
-                                 (i * PIXEL_SIZE + GRID_LINE_WIDTH / 2, height), GRID_LINE_WIDTH)
-            i = COLS
-            pygame.draw.line(canvas_surface, BLACK, (i * PIXEL_SIZE - GRID_LINE_WIDTH / 2, 0),
-                             (i * PIXEL_SIZE - GRID_LINE_WIDTH / 2, height), GRID_LINE_WIDTH)
+        frame_rect = pygame.Rect(0, 0, *self.rect.size)
+        frame_surface = self.frame.get_surface(frame_rect)
+        canvas_surface.blit(frame_surface, frame_rect)
         return canvas_surface

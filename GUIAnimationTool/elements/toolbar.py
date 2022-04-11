@@ -1,7 +1,8 @@
 from utils import *
 
 
-# TODO?: Add a Floodfill button. '?' because we probbly dont need one but its cool
+# TODO?: Add a Floodfill button. '?' because we probably dont need one but its cool
+# TODO?: Add an Undo button. '?' because we probably dont need one but its cool
 class Toolbar:
     def __init__(self, rect):
         self.rect = rect

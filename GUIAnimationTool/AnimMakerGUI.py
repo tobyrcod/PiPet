@@ -19,9 +19,9 @@ def main():
         canvas.change_draw_color(button.color)
 
     def reset_canvas(button):
-        canvas.reset()
+        canvas.clear()
 
-    canvas = Canvas(pygame.Rect(PADDING, PADDING, CANVAS_WIDTH, CANVAS_HEIGHT))
+    canvas = Canvas(pygame.Rect(PADDING, PADDING, CANVAS_WIDTH, CANVAS_HEIGHT), Frame(ROWS, COLS, WHITE))
     toolbar = Toolbar(pygame.Rect(2 * PADDING + CANVAS_WIDTH, PADDING, TOOLBAR_WIDTH, TOOLBAR_HEIGHT))
     animator = Animator(pygame.Rect(PADDING, 2 * PADDING + CANVAS_HEIGHT, ANIMATOR_WIDTH, ANIMATOR_HEIGHT))
     preview = Preview(pygame.Rect(2 * PADDING + CANVAS_WIDTH, 2 * PADDING + CANVAS_HEIGHT, PREVIEW_WIDTH, PREVIEW_HEIGHT))
