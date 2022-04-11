@@ -1,5 +1,6 @@
 import pygame
 from collections import namedtuple
+from events import Events
 pygame.init()
 pygame.font.init()
 
