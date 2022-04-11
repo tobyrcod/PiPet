@@ -33,12 +33,13 @@ def main():
             if event.type == pygame.QUIT:
                 run = False
 
-            if pygame.mouse.get_pressed()[0]:  # if the left mouse button is clicked
-                mouse_pos = pygame.mouse.get_pos()
+            mouse_pos = pygame.mouse.get_pos()
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:  # if the left mouse button is clicked
+                if toolbar.rect.collidepoint(mouse_pos):
+                    toolbar.clicked(mouse_pos)
+            elif pygame.mouse.get_pressed()[0]:  # if the left mouse button is held
                 if canvas.rect.collidepoint(mouse_pos):
                     canvas.clicked(mouse_pos)
-                elif toolbar.rect.collidepoint(mouse_pos):
-                    toolbar.clicked(mouse_pos)
 
         draw(WIN, canvas, toolbar)
 
