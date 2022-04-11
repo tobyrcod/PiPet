@@ -8,14 +8,21 @@ class Toolbar:
 
         padding_count = TOOLBAR_COLUMNS + 1
         padded_space = TOOLBAR_PADDING * padding_count
-        button_space = rect.width - padded_space
+        button_space = self.rect.width - padded_space
         button_width = button_height = button_space // TOOLBAR_COLUMNS
-        self.buttons = []
+        self.color_buttons = []
         for i, color in enumerate(colors):
             button = Button(pygame.Rect(TOOLBAR_PADDING + (i % TOOLBAR_COLUMNS) * (TOOLBAR_PADDING + button_width),
                                         TOOLBAR_PADDING + (i // TOOLBAR_COLUMNS) * (TOOLBAR_PADDING + button_height),
                                         button_width, button_height), color)
-            self.buttons.append(button)
+            self.color_buttons.append(button)
+        self.other_buttons = {}
+        for i, name in enumerate(["Erase", "Clear"]):
+            button = Button(pygame.Rect(TOOLBAR_PADDING + (i % TOOLBAR_COLUMNS) * (TOOLBAR_PADDING + button_width),
+                                        self.rect.height - TOOLBAR_PADDING - button_height, button_width,
+                                        button_height), WHITE, name, BLACK)
+            self.other_buttons[name] = button
+        self.buttons = self.color_buttons + list(self.other_buttons.values())
 
     def clicked(self, mouse_pos):
         local_pos = np.subtract(mouse_pos, self.rect.topleft)

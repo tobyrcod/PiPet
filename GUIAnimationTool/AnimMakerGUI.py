@@ -22,8 +22,11 @@ def main():
     canvas = Canvas(pygame.Rect(PADDING, PADDING, CANVAS_WIDTH, CANVAS_HEIGHT))
     toolbar = Toolbar(pygame.Rect(2 * PADDING + CANVAS_WIDTH, PADDING, TOOLBAR_WIDTH, TOOLBAR_HEIGHT))
 
-    for button in toolbar.buttons:
+    for button in toolbar.color_buttons:
         button.button_events.on_clicked += change_canvas_draw_color
+
+    toolbar.other_buttons['Erase'].button_events.on_clicked += change_canvas_draw_color
+    toolbar.other_buttons['Clear'].button_events.on_clicked += reset_canvas
 
     run = True
     while run:
@@ -35,10 +38,11 @@ def main():
             mouse_pos = pygame.mouse.get_pos()
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:  # if the left mouse button is clicked
                 if toolbar.rect.collidepoint(mouse_pos):
-                    print('toolbar clicked')
                     toolbar.clicked(mouse_pos)
+                elif canvas.rect.collidepoint(mouse_pos):
+                    canvas.clicked(mouse_pos)
+            elif pygame.mouse.get_pressed()[0]:  # if the left mouse button is held
                 if canvas.rect.collidepoint(mouse_pos):
-                    print('canvas clicked')
                     canvas.clicked(mouse_pos)
 
         draw(WIN, canvas, toolbar)
