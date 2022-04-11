@@ -9,13 +9,13 @@ class Animator:
 
         animator_surface = pygame.Surface(self.rect.size)
 
-        animator_surface.fill(BLACK)
+        animator_surface.fill(WHITE)
 
-        font = get_font(size=60)
-        text_surface = font.render("Animator", 1, WHITE)
+        font = get_font(size=30)
+        text_surface = font.render("Animator", 1, BLACK)
         animator_surface.blit(text_surface, (
-            self.rect.width / 2 - text_surface.get_width() / 2,
-            self.rect.height / 2 - text_surface.get_height() / 2
+            0,
+            self.rect.height - text_surface.get_height()
         ))
 
         return animator_surface

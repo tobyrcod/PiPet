@@ -1,6 +1,7 @@
 from utils import *
 
 
+# TODO?: Add a Floodfill button. '?' because we probbly dont need one but its cool
 class Toolbar:
     def __init__(self, rect):
         self.rect = rect
@@ -19,8 +20,9 @@ class Toolbar:
         self.other_buttons = {}
         for i, name in enumerate(["Erase", "Clear"]):
             button = Button(pygame.Rect(TOOLBAR_PADDING + (i % TOOLBAR_COLUMNS) * (TOOLBAR_PADDING + button_width),
-                                        self.rect.height - TOOLBAR_PADDING - button_height, button_width,
-                                        button_height), WHITE, name, BLACK)
+                                        (self.rect.height - TOOLBAR_PADDING - button_height) - (
+                                                    i // TOOLBAR_COLUMNS) * (TOOLBAR_PADDING + button_height),
+                                        button_width, button_height), WHITE, name, BLACK)
             self.other_buttons[name] = button
         self.buttons = self.color_buttons + list(self.other_buttons.values())
 
