@@ -13,7 +13,7 @@ clock = pygame.time.Clock()
 class Canvas:
     def __init__(self):
         self.grid = self.init_grid(ROWS, COLS, WHITE)
-        self.draw_color = RED
+        self.draw_color = BLACK
 
     def init_grid(self, rows, cols, start_color):
         grid = []
@@ -40,8 +40,8 @@ class Canvas:
     def paint_pixel(self, x, y):
         self.grid[y][x] = self.draw_color
 
-    def change_draw_color(self, new_color):
-        self.draw_color = new_color
+    def change_draw_color(self, button):
+        self.draw_color = button.color
 
     def clicked(self, mouse_pos):
         coord = self.get_coord_from_pos(mouse_pos)
@@ -78,26 +78,41 @@ class Canvas:
 
 class Toolbar:
     def __init__(self):
-        button_y = HEIGHT - TOOLBAR_HEIGHT / 2 - 25
+        button_y = TOOLBAR_HEIGHT / 2 - 25
         self.buttons = [
-            Button(10, button_y, 50, 50, BLACK),
-            Button(70, button_y, 50, 50, RED),
-            Button(130, button_y, 50, 50, GREEN),
-            Button(190, button_y, 50, 50, BLUE),
-            Button(250, button_y, 50, 50, WHITE, "Erase", BLACK),
+            Button(pygame.Rect(10, button_y, 50, 50), BLACK),
+            Button(pygame.Rect(70, button_y, 50, 50), RED),
+            Button(pygame.Rect(130, button_y, 50, 50), GREEN),
+            Button(pygame.Rect(190, button_y, 50, 50), BLUE),
+            Button(pygame.Rect(250, button_y, 50, 50), WHITE, "Erase", BLACK),
         ]
 
     def clicked(self, mouse_pos):
+        local_pos = np.subtract(mouse_pos, toolbar_rect.topleft)
         for button in self.buttons:
-            if not button.is_mouse_over(mouse_pos):
+            print(button.rect)
+            print(button.rect.collidepoint(local_pos))
+            if not button.rect.collidepoint(local_pos):
                 continue
 
             # If we clicked on this button
             button.button_events.on_clicked(button)
 
-    def draw(self, win):
+    def get_surface(self):
+
+        toolbar_surface = pygame.Surface([WIDTH, TOOLBAR_HEIGHT])
+
+        toolbar_surface.fill((100, 100, 100))
+
         for button in self.buttons:
-            button.draw(win)
+            button_surface = button.get_surface()
+            toolbar_surface.blit(button_surface, button.rect)
+
+        return toolbar_surface
+
+
+canvas_rect = pygame.Rect(0, 0, WIDTH, WIDTH)
+toolbar_rect = pygame.Rect(0, WIDTH, WIDTH, TOOLBAR_HEIGHT)
 
 
 # Main game Loop
@@ -107,7 +122,7 @@ def main():
     toolbar = Toolbar()
 
     for button in toolbar.buttons:
-        button.button_events.on_clicked += lambda button: canvas.change_draw_color(button.color)
+        button.button_events.on_clicked += canvas.change_draw_color
 
     run = True
     while run:
@@ -118,7 +133,10 @@ def main():
 
             if pygame.mouse.get_pressed()[0]:  # if the left mouse button is clicked
                 mouse_pos = pygame.mouse.get_pos()
-                canvas.clicked(mouse_pos)
+                if canvas_rect.collidepoint(mouse_pos):
+                    canvas.clicked(mouse_pos)
+                elif toolbar_rect.collidepoint(mouse_pos):
+                    toolbar.clicked(mouse_pos)
 
         draw(WIN, canvas, toolbar)
 
@@ -133,9 +151,10 @@ def draw(win, canvas, toolbar):
     win.fill(BG_COLOR)
 
     canvas_surface = canvas.get_surface()
-    win.blit(canvas_surface, (0, 0))
+    win.blit(canvas_surface, canvas_rect)
 
-    toolbar.draw(win)
+    toolbar_canvas = toolbar.get_surface()
+    win.blit(toolbar_canvas, toolbar_rect)
 
     pygame.display.update()
 

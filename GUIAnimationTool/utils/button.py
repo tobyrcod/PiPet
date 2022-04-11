@@ -2,49 +2,31 @@ from .settings import *
 
 
 class Button:
-    def __init__(self, x, y, width, height, color, text=None, text_color=BLACK):
-        self.x = x
-        self.y = y
-        self.width = width
-        self.height = height
+    def __init__(self, rect, color, text=None, text_color=BLACK):
+        self.rect = rect
         self.color = color
         self.text = text
         self.text_color = text_color
         self.button_events = ButtonEvents()
 
-    def draw(self, win):
+    def get_surface(self):
+        button_surface = pygame.Surface(self.rect.size)
         # Square of Color
-        pygame.draw.rect(win, self.color, (
-            self.x, self.y,
-            self.width, self.height
-        ))
+        button_surface.fill(self.color)
 
         if self.text:
             # Outline
-            pygame.draw.rect(win, BLACK, (
-                self.x, self.y,
-                self.width, self.height
-            ), 2)
+            pygame.draw.rect(button_surface, BLACK, (0, 0, *self.rect.size), 3)
 
             # Button Text
-            button_font = get_font(22)
+            button_font = get_font(size=22)
             text_surface = button_font.render(self.text, 1, self.text_color)
-            win.blit(text_surface, (
-                self.x + self.width / 2 - text_surface.get_width() / 2,
-                self.y + self.height / 2 - text_surface.get_height() / 2
+            button_surface.blit(text_surface, (
+                self.rect.width / 2 - text_surface.get_width() / 2,
+                self.rect.height / 2 - text_surface.get_height() / 2
             ))
 
-    def is_mouse_over(self, pos):
-        x, y = pos
-        pixel = Vector2(x, y)
-
-        if pixel.x < self.x or pixel.x >= self.x + self.width:
-            return False
-
-        if pixel.y < self.y or pixel.y >= self.y + self.height:
-            return False
-
-        return True
+        return button_surface
 
 
 class ButtonEvents(Events):
