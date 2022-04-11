@@ -2,6 +2,7 @@
 # https://www.youtube.com/watch?v=N20eXcfyQ_4
 from utils import *
 from elements import *
+
 # TODO: Change application icon
 
 # Pygame variables
@@ -12,12 +13,18 @@ clock = pygame.time.Clock()
 
 # Main game Loop
 def main():
+    def change_canvas_draw_color(button):
+        canvas.change_draw_color(button.color)
+
+    def reset_canvas(button):
+        canvas.reset()
 
     canvas = Canvas(pygame.Rect(0, 0, WIDTH, WIDTH))
     toolbar = Toolbar(pygame.Rect(0, WIDTH, WIDTH, TOOLBAR_HEIGHT))
 
     for button in toolbar.buttons:
-        button.button_events.on_clicked += canvas.change_draw_color
+        button.button_events.on_clicked += change_canvas_draw_color
+    toolbar.buttons[-1].button_events.on_clicked += reset_canvas
 
     run = True
     while run:

@@ -11,6 +11,7 @@ class Toolbar:
             Button(pygame.Rect(130, button_y, 50, 50), GREEN),
             Button(pygame.Rect(190, button_y, 50, 50), BLUE),
             Button(pygame.Rect(250, button_y, 50, 50), WHITE, "Erase", BLACK),
+            Button(pygame.Rect(310, button_y, 50, 50), WHITE, "Reset", BLACK),
         ]
 
     def clicked(self, mouse_pos):

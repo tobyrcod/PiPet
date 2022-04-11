@@ -4,8 +4,8 @@ from utils import *
 class Canvas:
     def __init__(self, rect):
         self.rect = rect
-        self.grid = self.init_grid(ROWS, COLS, WHITE)
         self.draw_color = BLACK
+        self.grid = self.init_grid(ROWS, COLS, WHITE)
 
     def init_grid(self, rows, cols, start_color):
         grid = []
@@ -34,8 +34,12 @@ class Canvas:
 
     # I hate this button argument please fix it...
     # it should be color
-    def change_draw_color(self, button):
-        self.draw_color = button.color
+    def change_draw_color(self, color):
+        self.draw_color = color
+
+    def reset(self):
+        self.draw_color = BLACK
+        self.grid = self.init_grid(ROWS, COLS, WHITE)
 
     def clicked(self, mouse_pos):
         coord = self.get_coord_from_pos(mouse_pos)
