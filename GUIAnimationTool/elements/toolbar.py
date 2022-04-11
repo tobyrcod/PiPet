@@ -4,15 +4,18 @@ from utils import *
 class Toolbar:
     def __init__(self, rect):
         self.rect = rect
-        button_y = TOOLBAR_HEIGHT / 2 - 25
-        self.buttons = [
-            Button(pygame.Rect(10, button_y, 50, 50), BLACK),
-            Button(pygame.Rect(70, button_y, 50, 50), RED),
-            Button(pygame.Rect(130, button_y, 50, 50), GREEN),
-            Button(pygame.Rect(190, button_y, 50, 50), BLUE),
-            Button(pygame.Rect(250, button_y, 50, 50), WHITE, "Erase", BLACK),
-            Button(pygame.Rect(310, button_y, 50, 50), WHITE, "Reset", BLACK),
-        ]
+        colors = [BLACK, RED, BLUE, GREEN]
+
+        padding_count = TOOLBAR_COLUMNS + 1
+        padded_space = TOOLBAR_PADDING * padding_count
+        button_space = rect.width - padded_space
+        button_width = button_height = button_space // TOOLBAR_COLUMNS
+        self.buttons = []
+        for i, color in enumerate(colors):
+            button = Button(pygame.Rect(TOOLBAR_PADDING + (i % TOOLBAR_COLUMNS) * (TOOLBAR_PADDING + button_width),
+                                        TOOLBAR_PADDING + (i // TOOLBAR_COLUMNS) * (TOOLBAR_PADDING + button_height),
+                                        button_width, button_height), color)
+            self.buttons.append(button)
 
     def clicked(self, mouse_pos):
         local_pos = np.subtract(mouse_pos, self.rect.topleft)

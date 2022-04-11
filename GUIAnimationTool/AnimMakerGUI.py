@@ -19,12 +19,11 @@ def main():
     def reset_canvas(button):
         canvas.reset()
 
-    canvas = Canvas(pygame.Rect(0, 0, WIDTH, WIDTH))
-    toolbar = Toolbar(pygame.Rect(0, WIDTH, WIDTH, TOOLBAR_HEIGHT))
+    canvas = Canvas(pygame.Rect(PADDING, PADDING, CANVAS_WIDTH, CANVAS_HEIGHT))
+    toolbar = Toolbar(pygame.Rect(2 * PADDING + CANVAS_WIDTH, PADDING, TOOLBAR_WIDTH, TOOLBAR_HEIGHT))
 
     for button in toolbar.buttons:
         button.button_events.on_clicked += change_canvas_draw_color
-    toolbar.buttons[-1].button_events.on_clicked += reset_canvas
 
     run = True
     while run:
@@ -36,9 +35,10 @@ def main():
             mouse_pos = pygame.mouse.get_pos()
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:  # if the left mouse button is clicked
                 if toolbar.rect.collidepoint(mouse_pos):
+                    print('toolbar clicked')
                     toolbar.clicked(mouse_pos)
-            elif pygame.mouse.get_pressed()[0]:  # if the left mouse button is held
                 if canvas.rect.collidepoint(mouse_pos):
+                    print('canvas clicked')
                     canvas.clicked(mouse_pos)
 
         draw(WIN, canvas, toolbar)
@@ -51,7 +51,7 @@ def main():
 #  and realistically that doesn't matter at all for this simple use case
 def draw(win, canvas, toolbar):
 
-    win.fill(BG_COLOR)
+    win.fill(CREAM)
 
     canvas_surface = canvas.get_surface()
     win.blit(canvas_surface, canvas.rect)

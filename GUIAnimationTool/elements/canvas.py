@@ -42,13 +42,15 @@ class Canvas:
         self.grid = self.init_grid(ROWS, COLS, WHITE)
 
     def clicked(self, mouse_pos):
-        coord = self.get_coord_from_pos(mouse_pos)
+        local_pos = np.subtract(mouse_pos, self.rect.topleft)
+        coord = self.get_coord_from_pos(local_pos)
         # Clicked on the canvas
         self.paint_pixel(*coord)
 
     def get_surface(self):
 
-        canvas_surface = pygame.Surface([WIDTH, WIDTH])
+        width, height = self.rect.size
+        canvas_surface = pygame.Surface(self.rect.size)
 
         for y, row in enumerate(self.grid):
             for x, cell_color in enumerate(row):
@@ -60,15 +62,15 @@ class Canvas:
         if DRAW_GRID_LINES:
             for i in range(0, ROWS + 1):
                 pygame.draw.line(canvas_surface, BLACK, (0, i * PIXEL_SIZE + GRID_LINE_WIDTH / 2),
-                                 (WIDTH, i * PIXEL_SIZE + GRID_LINE_WIDTH / 2), GRID_LINE_WIDTH)
+                                 (width, i * PIXEL_SIZE + GRID_LINE_WIDTH / 2), GRID_LINE_WIDTH)
             i = ROWS
             pygame.draw.line(canvas_surface, BLACK, (0, i * PIXEL_SIZE - GRID_LINE_WIDTH / 2),
-                             (WIDTH, i * PIXEL_SIZE - GRID_LINE_WIDTH / 2), GRID_LINE_WIDTH)
+                             (width, i * PIXEL_SIZE - GRID_LINE_WIDTH / 2), GRID_LINE_WIDTH)
 
             for i in range(0, COLS):
                 pygame.draw.line(canvas_surface, BLACK, (i * PIXEL_SIZE + GRID_LINE_WIDTH / 2, 0),
-                                 (i * PIXEL_SIZE + GRID_LINE_WIDTH / 2, HEIGHT - TOOLBAR_HEIGHT), GRID_LINE_WIDTH)
+                                 (i * PIXEL_SIZE + GRID_LINE_WIDTH / 2, height), GRID_LINE_WIDTH)
             i = COLS
             pygame.draw.line(canvas_surface, BLACK, (i * PIXEL_SIZE - GRID_LINE_WIDTH / 2, 0),
-                             (i * PIXEL_SIZE - GRID_LINE_WIDTH / 2, HEIGHT - TOOLBAR_HEIGHT), GRID_LINE_WIDTH)
+                             (i * PIXEL_SIZE - GRID_LINE_WIDTH / 2, height), GRID_LINE_WIDTH)
         return canvas_surface
