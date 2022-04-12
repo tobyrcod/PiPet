@@ -25,8 +25,8 @@ def main():
     toolbar = Toolbar(pygame.Rect(2 * PADDING + CANVAS_WIDTH, PADDING, TOOLBAR_WIDTH, TOOLBAR_HEIGHT))
     preview = Preview(pygame.Rect(2 * PADDING + CANVAS_WIDTH, 2 * PADDING + CANVAS_HEIGHT, PREVIEW_WIDTH, PREVIEW_HEIGHT))
 
-    animator.events.on_active_animator_frame_index_changed += lambda index: canvas.set_frame(animator.frames[index])
-    animator.init()
+    animator.timeline.events.on_active_timeline_frame_index_changed += lambda index: canvas.set_frame(animator.timeline.frames[index])
+    animator.timeline.init()
 
     for button in toolbar.color_buttons:
         button.events.on_clicked += toolbar.set_active_color_button
@@ -65,9 +65,9 @@ def main():
                     canvas.clicked(mouse_pos)
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
-                    animator.set_active_animator_frame_index(animator.active_animator_frame_index - 1)
+                    animator.timeline.set_active_timeline_frame_index(animator.timeline.active_timeline_frame_index - 1)
                 elif event.key == pygame.K_RIGHT:
-                    animator.set_active_animator_frame_index(animator.active_animator_frame_index + 1)
+                    animator.timeline.set_active_timeline_frame_index(animator.timeline.active_timeline_frame_index + 1)
                 elif event.key == pygame.K_1:
                     button = toolbar.brush_buttons['Brush']
                     button.events.on_clicked(button)
