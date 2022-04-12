@@ -42,6 +42,6 @@ class Canvas:
         canvas_surface = pygame.Surface(self.rect.size)
 
         frame_rect = pygame.Rect(0, 0, *self.rect.size)
-        frame_surface = self.frame.get_surface(frame_rect)
+        frame_surface = self.frame.get_surface(frame_rect, GRID_LINE_WIDTH)
         canvas_surface.blit(frame_surface, frame_rect)
         return canvas_surface

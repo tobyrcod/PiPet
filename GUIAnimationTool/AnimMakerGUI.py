@@ -21,9 +21,9 @@ def main():
     def reset_canvas(button):
         canvas.clear()
 
-    canvas = Canvas(pygame.Rect(PADDING, PADDING, CANVAS_WIDTH, CANVAS_HEIGHT), Frame(ROWS, COLS, WHITE))
-    toolbar = Toolbar(pygame.Rect(2 * PADDING + CANVAS_WIDTH, PADDING, TOOLBAR_WIDTH, TOOLBAR_HEIGHT))
     animator = Animator(pygame.Rect(PADDING, 2 * PADDING + CANVAS_HEIGHT, ANIMATOR_WIDTH, ANIMATOR_HEIGHT))
+    canvas = Canvas(pygame.Rect(PADDING, PADDING, CANVAS_WIDTH, CANVAS_HEIGHT), animator.frames[0])
+    toolbar = Toolbar(pygame.Rect(2 * PADDING + CANVAS_WIDTH, PADDING, TOOLBAR_WIDTH, TOOLBAR_HEIGHT))
     preview = Preview(pygame.Rect(2 * PADDING + CANVAS_WIDTH, 2 * PADDING + CANVAS_HEIGHT, PREVIEW_WIDTH, PREVIEW_HEIGHT))
 
     for button in toolbar.color_buttons:
@@ -35,6 +35,7 @@ def main():
     run = True
     while run:
         clock.tick(FPS)
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
