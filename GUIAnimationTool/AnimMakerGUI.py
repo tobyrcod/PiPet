@@ -15,28 +15,26 @@ clock = pygame.time.Clock()
 
 # Main game Loop
 def main():
-    def change_canvas_draw_color(button):
-        canvas.change_draw_color(button.color)
-
-    def reset_canvas(button):
-        canvas.clear()
-
-    def set_canvas_frame_from_animator_index(index):
-        canvas.set_frame(animator.frames[index])
-
     animator = Animator(pygame.Rect(PADDING, 2 * PADDING + CANVAS_HEIGHT, ANIMATOR_WIDTH, ANIMATOR_HEIGHT))
     canvas = Canvas(pygame.Rect(PADDING, PADDING, CANVAS_WIDTH, CANVAS_HEIGHT))
     toolbar = Toolbar(pygame.Rect(2 * PADDING + CANVAS_WIDTH, PADDING, TOOLBAR_WIDTH, TOOLBAR_HEIGHT))
     preview = Preview(pygame.Rect(2 * PADDING + CANVAS_WIDTH, 2 * PADDING + CANVAS_HEIGHT, PREVIEW_WIDTH, PREVIEW_HEIGHT))
 
-    animator.events.on_active_animator_frame_index_changed += set_canvas_frame_from_animator_index
+    animator.events.on_active_animator_frame_index_changed += lambda index: canvas.set_frame(animator.frames[index])
     animator.init()
 
     for button in toolbar.color_buttons:
-        button.events.on_clicked += change_canvas_draw_color
+        button.events.on_clicked += lambda button: canvas.change_draw_color(button.color)
 
-    toolbar.other_buttons['Erase'].events.on_clicked += change_canvas_draw_color
-    toolbar.other_buttons['Clear'].events.on_clicked += reset_canvas
+    for button in toolbar.brush_buttons.values():
+        button.events.on_clicked += toolbar.set_active_brush_button
+
+    # I know using lambdas for events isn't the best as I lose the ability to remove them, but I dont ever need to
+    toolbar.brush_buttons['Erase'].events.on_clicked += lambda b: canvas.set_to_erase()
+    toolbar.brush_buttons['Brush'].events.on_clicked += lambda b: canvas.set_to_brush()
+    toolbar.brush_buttons['Fill'].events.on_clicked += lambda b: canvas.set_to_fill()
+
+    toolbar.other_buttons['Clear'].events.on_clicked += lambda b: canvas.clear()
 
     run = True
     while run:

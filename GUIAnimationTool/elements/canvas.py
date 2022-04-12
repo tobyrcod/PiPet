@@ -1,19 +1,35 @@
 from utils import *
 from .frame import Frame
+from interfaces import IClickable
 
 
-# TODO: Upgrade to use frames instead of handling the grid directly, i.e make the canvas display the frames that are
-#  in the animator, not the other way round
-class Canvas:
+class Canvas(IClickable):
     def __init__(self, rect):
-        self.rect = rect
+        super().__init__(rect)
+
+        self.set_to_brush()
+
         self.draw_color = BLACK
+
         self.frame = None
         self.pixel_size = -1
 
     def set_frame(self, frame):
         self.frame = frame
         self.pixel_size = self.rect.width // frame.rows
+
+    def set_to_brush(self):
+        self.events.on_clicked.remove_all_callbacks()
+        self.events.on_clicked += lambda coord: self.frame.paint_pixel(*coord, self.draw_color)
+
+    def set_to_fill(self):
+        self.events.on_clicked.remove_all_callbacks()
+        self.events.on_clicked += lambda coord: self.frame.paint_pixel(*coord, self.draw_color)
+
+    def set_to_erase(self):
+        self.events.on_clicked.remove_all_callbacks()
+        self.events.on_clicked += lambda coord: self.frame.paint_pixel(*coord, WHITE)
+
 
     def get_coord_from_pos(self, pos):
         x, y = pos
@@ -27,14 +43,10 @@ class Canvas:
 
         return coord
 
-    # I hate this button argument please fix it...
-    # it should be color
     def change_draw_color(self, color):
         self.draw_color = color
 
     def clear(self):
-        self.draw_color = BLACK
-
         if self.frame is not None:
             self.frame.clear()
 
@@ -43,7 +55,7 @@ class Canvas:
             local_pos = np.subtract(mouse_pos, self.rect.topleft)
             coord = self.get_coord_from_pos(local_pos)
             # Clicked on the canvas
-            self.frame.paint_pixel(*coord, self.draw_color)
+            self.events.on_clicked(coord)
 
     def get_surface(self):
         canvas_surface = pygame.Surface(self.rect.size)

@@ -18,14 +18,27 @@ class Toolbar:
                                         TOOLBAR_PADDING + (i // TOOLBAR_COLUMNS) * (TOOLBAR_PADDING + button_height),
                                         button_width, button_height), color)
             self.color_buttons.append(button)
-        self.other_buttons = {}
-        for i, name in enumerate(["Erase", "Clear"]):
+
+        self.brush_buttons = {}
+        for i, name in enumerate(["Brush", "Fill", "Erase"]):
             button = Button(pygame.Rect(TOOLBAR_PADDING + (i % TOOLBAR_COLUMNS) * (TOOLBAR_PADDING + button_width),
                                         (self.rect.height - TOOLBAR_PADDING - button_height) - (
-                                                    i // TOOLBAR_COLUMNS) * (TOOLBAR_PADDING + button_height),
+                                            (i // TOOLBAR_COLUMNS) + 1) * (TOOLBAR_PADDING + button_height),
+                                        button_width, button_height), WHITE, name, BLACK)
+            self.brush_buttons[name] = button
+        self.active_brush_button = self.brush_buttons["Brush"]
+
+        self.other_buttons = {}
+        for i, name in enumerate(["Clear"]):
+            button = Button(pygame.Rect(TOOLBAR_PADDING + (i % TOOLBAR_COLUMNS) * (TOOLBAR_PADDING + button_width),
+                                        (self.rect.height - TOOLBAR_PADDING - button_height) - (
+                                                i // TOOLBAR_COLUMNS) * (TOOLBAR_PADDING + button_height),
                                         button_width, button_height), WHITE, name, BLACK)
             self.other_buttons[name] = button
-        self.buttons = self.color_buttons + list(self.other_buttons.values())
+        self.buttons = self.color_buttons + list(self.brush_buttons.values()) + list((self.other_buttons.values()))
+
+    def set_active_brush_button(self, button):
+        self.active_brush_button = button
 
     def clicked(self, mouse_pos):
         local_pos = np.subtract(mouse_pos, self.rect.topleft)
@@ -42,7 +55,15 @@ class Toolbar:
 
         toolbar_surface.fill(WHITE)
 
-        for button in self.buttons:
+        for button in self.color_buttons:
+            button_surface = button.get_surface()
+            toolbar_surface.blit(button_surface, button.rect)
+
+        for button in self.brush_buttons.values():
+            button_surface = button.get_surface(button == self.active_brush_button)
+            toolbar_surface.blit(button_surface, button.rect)
+
+        for button in self.other_buttons.values():
             button_surface = button.get_surface()
             toolbar_surface.blit(button_surface, button.rect)
 

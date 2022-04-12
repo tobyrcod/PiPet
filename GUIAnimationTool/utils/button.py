@@ -10,14 +10,15 @@ class Button(IClickable):
         self.text = text
         self.text_color = text_color
 
-    def get_surface(self):
+    def get_surface(self, is_active=False):
         button_surface = pygame.Surface(self.rect.size)
         # Square of Color
         button_surface.fill(self.color)
 
         if self.text:
             # Outline
-            pygame.draw.rect(button_surface, BLACK, (0, 0, *self.rect.size), 3)
+            outline_color = RED if is_active else BLACK
+            pygame.draw.rect(button_surface, outline_color, (0, 0, *self.rect.size), 3)
 
             # Button Text
             button_font = get_font(size=22)
