@@ -12,7 +12,7 @@ class Animator:
     def clicked(self, mouse_pos):
         local_pos = np.subtract(mouse_pos, self.rect.topleft)
 
-        if self.timeline.viewport_rect.collidepoint(local_pos):
+        if self.timeline.rect.collidepoint(local_pos):
             self.timeline.clicked(local_pos)
 
     def get_surface(self):
@@ -21,6 +21,6 @@ class Animator:
         animator_surface.fill(WHITE)
 
         timeline_surface = self.timeline.get_surface()
-        animator_surface.blit(timeline_surface, self.timeline.viewport_rect)
+        animator_surface.blit(timeline_surface, self.timeline.rect)
 
         return animator_surface

@@ -1,22 +1,27 @@
+import numpy as np
+
 from utils import *
 from .frame import Frame
 from interfaces import IClickable
 
 
 class Timeline:
-    def __init__(self, viewport_rect):
-        self.viewport_rect = viewport_rect
+    def __init__(self, rect):
+        self.rect = rect
         
         self.frames = []
-        self.events = TimelineEvents()
-
-        self.timeline_frame_rect = pygame.Rect(0, 0, FRAME_WIDTH, self.viewport_rect.height)
         self.timeline_frames = []
         self.active_timeline_frame_index = -1
+        self.events = TimelineEvents()
+
+        self.timeline_frame_rect = pygame.Rect(0, 0, FRAME_WIDTH, self.rect.height)
 
         new_frame_button_rect = pygame.Rect(0, 0, FRAME_WIDTH * 0.7, FRAME_WIDTH * 0.7)
         self.new_frame_button = Button(new_frame_button_rect, WHITE, "New")
         self.new_frame_button.events.on_clicked += self.add_new_frame
+
+        self.content_width = new_frame_button_rect.width
+        self.content_offset = 20
 
     def init(self):
         self.add_new_frame()
@@ -30,6 +35,7 @@ class Timeline:
         timeline_frame = TimelineFrame(pygame.Rect(self.timeline_frame_rect), new_timeline_frame_index, new_frame_index)
         timeline_frame.events.on_clicked += lambda a: self.set_active_timeline_frame_index(a.timeline_frame_index)
         self.timeline_frames.append(timeline_frame)
+        self.content_width += timeline_frame.rect.width + FRAME_PADDING
 
         self.set_active_timeline_frame_index(timeline_frame.timeline_frame_index)
 
@@ -39,7 +45,8 @@ class Timeline:
         self.events.on_active_timeline_frame_index_changed(self.active_timeline_frame_index)
 
     def clicked(self, mouse_pos):
-        local_pos = np.subtract(mouse_pos, self.viewport_rect.topleft)
+        local_pos = np.subtract(mouse_pos, self.rect.topleft)
+        local_pos = np.add(local_pos, (self.content_offset, 0))
 
         if self.new_frame_button.rect.collidepoint(local_pos):
             self.new_frame_button.events.on_clicked()
@@ -50,24 +57,28 @@ class Timeline:
 
     def get_surface(self):
 
-        timeline_surface = pygame.Surface(self.viewport_rect.size)
-
-        # Background
+        timeline_surface = pygame.Surface(self.rect.size)
         timeline_surface.fill(GREEN)
+
+        # Timeline Content
+        content_rect = pygame.Rect(-self.content_offset, 0, self.content_width, self.rect.height)
+        content_surface = pygame.Surface(content_rect.size)
+        content_surface.fill(BLUE)
 
         # All the frames
         i = -1
         for i, timeline_frame in enumerate(self.timeline_frames):
             timeline_frame.rect.topleft = (i * (FRAME_WIDTH + FRAME_PADDING), 0)
             timeline_frame_surface = timeline_frame.get_surface(self.frames, i == self.active_timeline_frame_index)
-            timeline_surface.blit(timeline_frame_surface, timeline_frame.rect)
+            content_surface.blit(timeline_frame_surface, timeline_frame.rect)
 
         # Add new frame button
         i += 1
         self.new_frame_button.rect.topleft = (i * (FRAME_WIDTH + FRAME_PADDING), self.timeline_frame_rect.height / 2 - self.new_frame_button.rect.height / 2)
         new_frame_button_surface = self.new_frame_button.get_surface()
-        timeline_surface.blit(new_frame_button_surface, self.new_frame_button.rect)
+        content_surface.blit(new_frame_button_surface, self.new_frame_button.rect)
 
+        timeline_surface.blit(content_surface, content_rect)
         return timeline_surface
 
 
