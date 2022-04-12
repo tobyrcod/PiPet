@@ -13,7 +13,7 @@ class Animator:
 
         self.animator_frame_rect = pygame.Rect(0, 0, FRAME_WIDTH, (self.rect.height - 3 * FRAME_PADDING) * 0.8)
         self.animator_frames = []
-        self.active_frame_index = -1
+        self.active_animator_frame_index = -1
 
         new_frame_button_rect = pygame.Rect(0, 0, FRAME_WIDTH * 0.7, FRAME_WIDTH * 0.7)
         self.new_frame_button = Button(new_frame_button_rect, WHITE, "New")
@@ -23,19 +23,21 @@ class Animator:
         self.add_new_frame()
 
     def add_new_frame(self):
+        new_animator_frame_index = new_frame_index = len(self.frames)
+
         frame = Frame(ROWS, COLS, WHITE)
         self.frames.append(frame)
 
-        new_frame_index = len(self.frames) - 1
-        animator_frame = AnimatorFrame(pygame.Rect(self.animator_frame_rect), new_frame_index)
-        animator_frame.events.on_clicked += self.set_active_frame_index
+        animator_frame = AnimatorFrame(pygame.Rect(self.animator_frame_rect), new_animator_frame_index, new_frame_index)
+        animator_frame.events.on_clicked += lambda a: self.set_active_animator_frame_index(a.animator_frame_index)
         self.animator_frames.append(animator_frame)
 
-        self.set_active_frame_index(new_frame_index)
+        self.set_active_animator_frame_index(animator_frame.animator_frame_index)
 
-    def set_active_frame_index(self, index):
-        self.active_frame_index = index
-        self.events.on_active_frame_index_changed(self.active_frame_index)
+    def set_active_animator_frame_index(self, animator_frame_index):
+        animator_frame_index %= len(self.animator_frames)
+        self.active_animator_frame_index = animator_frame_index
+        self.events.on_active_animator_frame_index_changed(self.active_animator_frame_index)
 
     def clicked(self, mouse_pos):
         local_pos = np.subtract(mouse_pos, self.rect.topleft)
@@ -45,7 +47,7 @@ class Animator:
         else:
             for animator_frame in self.animator_frames:
                 if animator_frame.rect.collidepoint(local_pos):
-                    animator_frame.events.on_clicked(animator_frame.frame_index)
+                    animator_frame.events.on_clicked(animator_frame)
 
     def get_surface(self):
 
@@ -59,7 +61,7 @@ class Animator:
         for i, animator_frame in enumerate(self.animator_frames):
             animator_frame.rect.topleft = (FRAME_PADDING + i * (FRAME_WIDTH + FRAME_PADDING), FRAME_PADDING)
 
-            animator_frame_surface = animator_frame.get_surface(self.frames, i == self.active_frame_index)
+            animator_frame_surface = animator_frame.get_surface(self.frames, i == self.active_animator_frame_index)
             animator_surface.blit(animator_frame_surface, animator_frame.rect)
 
         # Add new frame button
@@ -80,9 +82,10 @@ class Animator:
 
 
 class AnimatorFrame(IClickable):
-    def __init__(self, rect, frame_index):
+    def __init__(self, rect, animator_frame_index, frame_index):
         super().__init__(rect)
 
+        self.animator_frame_index = animator_frame_index
         self.frame_index = frame_index
         self.frame_rect = pygame.Rect(FRAME_PADDING, FRAME_PADDING, rect.width - 2 * FRAME_PADDING, rect.width - 2 * FRAME_PADDING)
 
@@ -103,4 +106,4 @@ class AnimatorFrame(IClickable):
 
 
 class AnimatorEvents(Events):
-    __events__ = 'on_active_frame_index_changed'
+    __events__ = 'on_active_animator_frame_index_changed'

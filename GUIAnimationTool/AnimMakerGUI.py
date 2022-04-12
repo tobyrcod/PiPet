@@ -29,7 +29,7 @@ def main():
     toolbar = Toolbar(pygame.Rect(2 * PADDING + CANVAS_WIDTH, PADDING, TOOLBAR_WIDTH, TOOLBAR_HEIGHT))
     preview = Preview(pygame.Rect(2 * PADDING + CANVAS_WIDTH, 2 * PADDING + CANVAS_HEIGHT, PREVIEW_WIDTH, PREVIEW_HEIGHT))
 
-    animator.events.on_active_frame_index_changed += set_canvas_frame_from_animator_index
+    animator.events.on_active_animator_frame_index_changed += set_canvas_frame_from_animator_index
     animator.init()
 
     for button in toolbar.color_buttons:
@@ -58,6 +58,11 @@ def main():
             elif pygame.mouse.get_pressed()[0]:  # if the left mouse button is held
                 if canvas.rect.collidepoint(mouse_pos):
                     canvas.clicked(mouse_pos)
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_LEFT:
+                    animator.set_active_animator_frame_index(animator.active_animator_frame_index - 1)
+                elif event.key == pygame.K_RIGHT:
+                    animator.set_active_animator_frame_index(animator.active_animator_frame_index + 1)
 
         draw(WIN, canvas, toolbar, animator, preview)
 
