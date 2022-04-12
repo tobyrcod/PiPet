@@ -25,6 +25,7 @@ class Frame:
 
     def flood_fill_pixel(self, x, y, fill_color, original_color=None):
 
+        print(Vector2(x, y))
         if not self.is_coord_valid(Vector2(x, y)):
             return
 

@@ -30,6 +30,7 @@ class Canvas(IClickable):
         self.events.on_clicked.remove_all_callbacks()
         self.events.on_clicked += lambda coord: self.frame.paint_pixel(*coord, WHITE)
 
+
     def get_coord_from_pos(self, pos):
         x, y = pos
         coord = Vector2(x // self.pixel_size, y // self.pixel_size)
