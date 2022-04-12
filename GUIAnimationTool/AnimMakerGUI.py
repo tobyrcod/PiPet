@@ -47,6 +47,8 @@ def main():
                     toolbar.clicked(mouse_pos)
                 elif canvas.rect.collidepoint(mouse_pos):
                     canvas.clicked(mouse_pos)
+                elif animator.rect.collidepoint(mouse_pos):
+                    animator.clicked(mouse_pos)
             elif pygame.mouse.get_pressed()[0]:  # if the left mouse button is held
                 if canvas.rect.collidepoint(mouse_pos):
                     canvas.clicked(mouse_pos)
