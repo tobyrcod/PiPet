@@ -61,6 +61,15 @@ def main():
                     animator.set_active_animator_frame_index(animator.active_animator_frame_index - 1)
                 elif event.key == pygame.K_RIGHT:
                     animator.set_active_animator_frame_index(animator.active_animator_frame_index + 1)
+                elif event.key == pygame.K_1:
+                    button = toolbar.brush_buttons['Brush']
+                    button.events.on_clicked(button)
+                elif event.key == pygame.K_2:
+                    button = toolbar.brush_buttons['Fill']
+                    button.events.on_clicked(button)
+                elif event.key == pygame.K_3:
+                    button = toolbar.brush_buttons['Erase']
+                    button.events.on_clicked(button)
 
         draw(WIN, canvas, toolbar, animator, preview)
 
