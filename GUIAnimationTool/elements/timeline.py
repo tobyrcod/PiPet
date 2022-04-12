@@ -1,5 +1,3 @@
-import numpy as np
-
 from utils import *
 from .frame import Frame
 from interfaces import IClickable
@@ -21,7 +19,7 @@ class Timeline:
         self.new_frame_button.events.on_clicked += self.add_new_frame
 
         self.content_width = new_frame_button_rect.width
-        self.content_offset = 20
+        self.content_offset = 0
 
     def init(self):
         self.add_new_frame()
