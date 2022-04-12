@@ -33,7 +33,7 @@ class Timeline:
         timeline_frame = TimelineFrame(pygame.Rect(self.timeline_frame_rect), new_timeline_frame_index, new_frame_index)
         timeline_frame.events.on_clicked += lambda a: self.set_active_timeline_frame_index(a.timeline_frame_index)
         self.timeline_frames.append(timeline_frame)
-        self.content_width += timeline_frame.rect.width + FRAME_PADDING
+        self.set_content_width(self.content_width + timeline_frame.rect.width + FRAME_PADDING)
 
         self.set_active_timeline_frame_index(timeline_frame.timeline_frame_index)
 
@@ -41,6 +41,10 @@ class Timeline:
         timeline_frame_index %= len(self.timeline_frames)
         self.active_timeline_frame_index = timeline_frame_index
         self.events.on_active_timeline_frame_index_changed(self.active_timeline_frame_index)
+
+    def set_content_width(self, width):
+        self.content_width = width
+        self.events.on_content_width_changed(self.content_width)
 
     def clicked(self, mouse_pos):
         local_pos = np.subtract(mouse_pos, self.rect.topleft)
@@ -105,4 +109,4 @@ class TimelineFrame(IClickable):
 
 
 class TimelineEvents(Events):
-    __events__ = 'on_active_timeline_frame_index_changed'
+    __events__ = ('on_active_timeline_frame_index_changed', 'on_content_width_changed')

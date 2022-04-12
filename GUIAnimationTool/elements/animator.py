@@ -11,7 +11,9 @@ class Animator:
         self.timeline = Timeline(timeline_rect)
 
         scrollbar_rect = pygame.Rect(FRAME_PADDING, timeline_rect.bottom + FRAME_PADDING, timeline_rect.width, (self.rect.height - timeline_rect.height - padding_space) / 2)
-        self.scrollbar = Scrollbar(scrollbar_rect)
+        self.scrollbar = Scrollbar(scrollbar_rect, self.timeline.rect.width, self.timeline.content_width)
+
+        self.timeline.events.on_content_width_changed += self.scrollbar.set_content_width
 
     def clicked(self, mouse_pos):
         local_pos = np.subtract(mouse_pos, self.rect.topleft)
