@@ -23,8 +23,14 @@ def main():
     animator.events.on_active_animator_frame_index_changed += lambda index: canvas.set_frame(animator.frames[index])
     animator.init()
 
+    def check_for_erase_button_active():
+        if toolbar.active_brush_button == toolbar.brush_buttons["Erase"]:
+            button = toolbar.brush_buttons['Brush']
+            button.events.on_clicked(button)
+
     for button in toolbar.color_buttons:
         button.events.on_clicked += lambda button: canvas.change_draw_color(button.color)
+        button.events.on_clicked += lambda button: check_for_erase_button_active()
 
     for button in toolbar.brush_buttons.values():
         button.events.on_clicked += toolbar.set_active_brush_button
