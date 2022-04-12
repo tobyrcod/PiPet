@@ -15,6 +15,11 @@ clock = pygame.time.Clock()
 
 # Main game Loop
 def main():
+    def check_for_erase_button_active():
+        if toolbar.active_brush_button == toolbar.brush_buttons["Erase"]:
+            button = toolbar.brush_buttons['Brush']
+            button.events.on_clicked(button)
+
     animator = Animator(pygame.Rect(PADDING, 2 * PADDING + CANVAS_HEIGHT, ANIMATOR_WIDTH, ANIMATOR_HEIGHT))
     canvas = Canvas(pygame.Rect(PADDING, PADDING, CANVAS_WIDTH, CANVAS_HEIGHT))
     toolbar = Toolbar(pygame.Rect(2 * PADDING + CANVAS_WIDTH, PADDING, TOOLBAR_WIDTH, TOOLBAR_HEIGHT))
@@ -23,12 +28,8 @@ def main():
     animator.events.on_active_animator_frame_index_changed += lambda index: canvas.set_frame(animator.frames[index])
     animator.init()
 
-    def check_for_erase_button_active():
-        if toolbar.active_brush_button == toolbar.brush_buttons["Erase"]:
-            button = toolbar.brush_buttons['Brush']
-            button.events.on_clicked(button)
-
     for button in toolbar.color_buttons:
+        button.events.on_clicked += toolbar.set_active_color_button
         button.events.on_clicked += lambda button: canvas.change_draw_color(button.color)
         button.events.on_clicked += lambda button: check_for_erase_button_active()
 

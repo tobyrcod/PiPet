@@ -18,6 +18,7 @@ class Toolbar:
                                         TOOLBAR_PADDING + (i // TOOLBAR_COLUMNS) * (TOOLBAR_PADDING + button_height),
                                         button_width, button_height), color)
             self.color_buttons.append(button)
+        self.active_color_button = self.color_buttons[0]
 
         self.brush_buttons = {}
         for i, name in enumerate(["Brush", "Fill", "Erase"]):
@@ -36,6 +37,10 @@ class Toolbar:
                                         button_width, button_height), WHITE, name, BLACK)
             self.other_buttons[name] = button
         self.buttons = self.color_buttons + list(self.brush_buttons.values()) + list((self.other_buttons.values()))
+
+    def set_active_color_button(self, button):
+        self.active_color_button = button
+        print(self.active_color_button)
 
     def set_active_brush_button(self, button):
         self.active_brush_button = button
@@ -56,7 +61,7 @@ class Toolbar:
         toolbar_surface.fill(WHITE)
 
         for button in self.color_buttons:
-            button_surface = button.get_surface()
+            button_surface = button.get_surface(button == self.active_color_button)
             toolbar_surface.blit(button_surface, button.rect)
 
         for button in self.brush_buttons.values():

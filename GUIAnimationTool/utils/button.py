@@ -27,5 +27,9 @@ class Button(IClickable):
                 self.rect.width / 2 - text_surface.get_width() / 2,
                 self.rect.height / 2 - text_surface.get_height() / 2
             ))
-
+        else:
+            if is_active:
+                pygame.draw.rect(button_surface, BLACK, (0, 0, *self.rect.size), 2)
+                pygame.draw.rect(button_surface, WHITE, (2, 2, self.rect.width - 4, self.rect.height - 4), 2)
         return button_surface
+
