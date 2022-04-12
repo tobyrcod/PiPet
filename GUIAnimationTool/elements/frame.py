@@ -1,7 +1,6 @@
 from utils import *
 
 
-# TODO: IMPORTANT! Split the frame into a 'frame' and a 'frame visual' class to handle the 'get_surface' method!
 class Frame:
     def __init__(self, rows, cols, start_color):
         self.rows = rows
@@ -9,8 +8,39 @@ class Frame:
         self.start_color = start_color
         self.grid = init_grid(rows, cols, start_color)
 
+    def is_coord_valid(self, coord):
+        if coord.x < 0 or coord.x >= self.cols:
+            return False
+
+        if coord.y < 0 or coord.y >= self.rows:
+            return False
+
+        return True
+
     def paint_pixel(self, x, y, color):
+        if not self.is_coord_valid(Vector2(x, y)):
+            return
+
         self.grid[y][x] = color
+
+    def flood_fill_pixel(self, x, y, fill_color, original_color=None):
+
+        print(Vector2(x, y))
+        if not self.is_coord_valid(Vector2(x, y)):
+            return
+
+        if original_color is None:
+            original_color = self.grid[y][x]
+
+        if self.grid[y][x] != original_color or self.grid[y][x] == fill_color:
+            return
+
+        self.paint_pixel(x, y, fill_color)
+
+        self.flood_fill_pixel(x + 1, y, fill_color, original_color)
+        self.flood_fill_pixel(x - 1, y, fill_color, original_color)
+        self.flood_fill_pixel(x, y + 1, fill_color, original_color)
+        self.flood_fill_pixel(x, y - 1, fill_color, original_color)
 
     def clear(self):
         self.grid = init_grid(self.rows, self.cols, self.start_color)

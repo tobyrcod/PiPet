@@ -24,7 +24,7 @@ class Canvas(IClickable):
 
     def set_to_fill(self):
         self.events.on_clicked.remove_all_callbacks()
-        self.events.on_clicked += lambda coord: self.frame.paint_pixel(*coord, self.draw_color)
+        self.events.on_clicked += lambda coord: self.frame.flood_fill_pixel(*coord, self.draw_color)
 
     def set_to_erase(self):
         self.events.on_clicked.remove_all_callbacks()
