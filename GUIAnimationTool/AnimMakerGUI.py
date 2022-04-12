@@ -21,16 +21,22 @@ def main():
     def reset_canvas(button):
         canvas.clear()
 
+    def set_canvas_frame_from_animator_index(index):
+        canvas.set_frame(animator.frames[index])
+
     animator = Animator(pygame.Rect(PADDING, 2 * PADDING + CANVAS_HEIGHT, ANIMATOR_WIDTH, ANIMATOR_HEIGHT))
-    canvas = Canvas(pygame.Rect(PADDING, PADDING, CANVAS_WIDTH, CANVAS_HEIGHT), animator.frames[0])
+    canvas = Canvas(pygame.Rect(PADDING, PADDING, CANVAS_WIDTH, CANVAS_HEIGHT))
     toolbar = Toolbar(pygame.Rect(2 * PADDING + CANVAS_WIDTH, PADDING, TOOLBAR_WIDTH, TOOLBAR_HEIGHT))
     preview = Preview(pygame.Rect(2 * PADDING + CANVAS_WIDTH, 2 * PADDING + CANVAS_HEIGHT, PREVIEW_WIDTH, PREVIEW_HEIGHT))
 
-    for button in toolbar.color_buttons:
-        button.button_events.on_clicked += change_canvas_draw_color
+    animator.events.on_active_frame_index_changed += set_canvas_frame_from_animator_index
+    animator.init()
 
-    toolbar.other_buttons['Erase'].button_events.on_clicked += change_canvas_draw_color
-    toolbar.other_buttons['Clear'].button_events.on_clicked += reset_canvas
+    for button in toolbar.color_buttons:
+        button.events.on_clicked += change_canvas_draw_color
+
+    toolbar.other_buttons['Erase'].events.on_clicked += change_canvas_draw_color
+    toolbar.other_buttons['Clear'].events.on_clicked += reset_canvas
 
     run = True
     while run:

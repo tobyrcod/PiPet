@@ -34,7 +34,7 @@ class Toolbar:
                 continue
 
             # If we clicked on this button
-            button.button_events.on_clicked(button)
+            button.events.on_clicked(button)
 
     def get_surface(self):
 

@@ -1,13 +1,14 @@
 from .settings import *
+from interfaces import IClickable
 
 
-class Button:
+class Button(IClickable):
     def __init__(self, rect, color, text=None, text_color=BLACK):
-        self.rect = rect
+        super().__init__(rect)
+
         self.color = color
         self.text = text
         self.text_color = text_color
-        self.button_events = ButtonEvents()
 
     def get_surface(self):
         button_surface = pygame.Surface(self.rect.size)
@@ -27,7 +28,3 @@ class Button:
             ))
 
         return button_surface
-
-
-class ButtonEvents(Events):
-    __events__ = 'on_clicked'
