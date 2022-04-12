@@ -1,3 +1,5 @@
+import pygame
+
 from utils import *
 from .frame import Frame
 from interfaces import IClickable
@@ -24,10 +26,12 @@ class Animator:
         frame = Frame(ROWS, COLS, WHITE)
         self.frames.append(frame)
 
-        animator_frame = AnimatorFrame(self.animator_frame_rect, frame)
+        new_frame_index = len(self.frames) - 1
+        animator_frame = AnimatorFrame(pygame.Rect(self.animator_frame_rect), new_frame_index)
+        animator_frame.events.on_clicked += self.set_active_frame_index
         self.animator_frames.append(animator_frame)
 
-        self.set_active_frame_index(len(self.frames) - 1)
+        self.set_active_frame_index(new_frame_index)
 
     def set_active_frame_index(self, index):
         self.active_frame_index = index
@@ -38,6 +42,10 @@ class Animator:
 
         if self.new_frame_button.rect.collidepoint(local_pos):
             self.new_frame_button.events.on_clicked()
+        else:
+            for animator_frame in self.animator_frames:
+                if animator_frame.rect.collidepoint(local_pos):
+                    animator_frame.events.on_clicked(animator_frame.frame_index)
 
     def get_surface(self):
 
@@ -51,7 +59,7 @@ class Animator:
         for i, animator_frame in enumerate(self.animator_frames):
             animator_frame.rect.topleft = (FRAME_PADDING + i * (FRAME_WIDTH + FRAME_PADDING), FRAME_PADDING)
 
-            animator_frame_surface = animator_frame.get_surface(i == self.active_frame_index)
+            animator_frame_surface = animator_frame.get_surface(self.frames, i == self.active_frame_index)
             animator_surface.blit(animator_frame_surface, animator_frame.rect)
 
         # Add new frame button
@@ -72,19 +80,20 @@ class Animator:
 
 
 class AnimatorFrame(IClickable):
-    def __init__(self, rect, frame):
+    def __init__(self, rect, frame_index):
         super().__init__(rect)
 
-        self.frame = frame
+        self.frame_index = frame_index
         self.frame_rect = pygame.Rect(FRAME_PADDING, FRAME_PADDING, rect.width - 2 * FRAME_PADDING, rect.width - 2 * FRAME_PADDING)
 
-    def get_surface(self, is_active_frame):
+    def get_surface(self, frames, is_active_frame):
 
         animator_frame_surface = pygame.Surface(self.rect.size)
 
         animator_frame_surface.fill(BLACK)
 
-        frame_surface = self.frame.get_surface(self.frame_rect)
+        frame = frames[self.frame_index]
+        frame_surface = frame.get_surface(self.frame_rect)
         animator_frame_surface.blit(frame_surface, self.frame_rect)
 
         if is_active_frame:
