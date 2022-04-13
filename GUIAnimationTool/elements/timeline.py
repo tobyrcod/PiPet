@@ -26,6 +26,10 @@ class Timeline:
         self.events.on_timeline_frame_added += lambda tf: self.set_active_timeline_frame_index(tf.index)
         self.events.on_timeline_frame_added += lambda tf: self.refresh_timeline_frames()
 
+        self.events.on_timeline_frame_deleted += lambda tf: self.add_content_width(-(self.timeline_frame_rect.width + FRAME_PADDING))
+        self.events.on_timeline_frame_deleted += lambda tf: self.handle_active_timeline_index_on_delete(tf.index)
+        self.events.on_timeline_frame_deleted += lambda tf: self.refresh_timeline_frames()
+
     def init(self):
         self.add_new_frame()
 
@@ -48,22 +52,37 @@ class Timeline:
         if self.active_timeline_frame_index in (tf_a.index, tf_b.index):
             self.set_active_timeline_frame_index(tf_b.index)
 
-    def delete_frame(self, timeline_frame):
+    def delete_frame(self, delete_timeline_frame):
         # move the frame we want to delete into the last timeline frame
         # shuffle everything else down one frame to fill the space
 
         # For every frame from the next one to the last one
-        for i in range(timeline_frame.index + 1, len(self.timeline_frames)):
+        for i in range(delete_timeline_frame.index + 1, len(self.timeline_frames)):
             previous_timeline_frame = self.timeline_frames[i - 1]
             next_timeline_frame = self.timeline_frames[i]
 
             previous_timeline_frame.frame, next_timeline_frame.frame = next_timeline_frame.frame, previous_timeline_frame.frame
 
+        # Remove the last timeline frame
+        self.timeline_frames = self.timeline_frames[:-1]
+
+        # Fire event
+        self.events.on_timeline_frame_deleted(delete_timeline_frame)
 
     def set_active_timeline_frame_index(self, timeline_frame_index):
         timeline_frame_index %= len(self.timeline_frames)
         self.active_timeline_frame_index = timeline_frame_index
         self.events.on_active_timeline_frame_index_changed(self.active_timeline_frame_index)
+
+    def handle_active_timeline_index_on_delete(self, deleted_index):
+        print(f'active: {self.active_timeline_frame_index}, del: {deleted_index}')
+        if self.active_timeline_frame_index == deleted_index:
+            if deleted_index == len(self.timeline_frames):
+                self.set_active_timeline_frame_index(self.active_timeline_frame_index - 1)
+            else:
+                self.set_active_timeline_frame_index(self.active_timeline_frame_index)
+        elif self.active_timeline_frame_index > deleted_index:
+            self.set_active_timeline_frame_index(self.active_timeline_frame_index - 1)
 
     def add_content_width(self, width):
         self.content_width += width
@@ -146,6 +165,7 @@ class TimelineFrame(IClickable):
 
         if self.delete_button.enabled and self.delete_button.rect.collidepoint(local_pos):
             self.delete_button.events.on_clicked(self)
+            return
 
         self.events.on_clicked(self)
 
@@ -184,4 +204,4 @@ class TimelineFrame(IClickable):
 
 
 class TimelineEvents(Events):
-    __events__ = ('on_active_timeline_frame_index_changed', 'on_timeline_frame_added', 'on_content_width_changed')
+    __events__ = ('on_active_timeline_frame_index_changed', 'on_timeline_frame_added', 'on_timeline_frame_deleted', 'on_content_width_changed')

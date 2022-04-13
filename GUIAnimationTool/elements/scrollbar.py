@@ -77,6 +77,9 @@ class ScrollBlock(IDraggable):
 
         self.min_pos, self.max_pos = SCROLL_PADDING, SCROLL_PADDING + self.max_width - self.rect.width
 
+        # When the width changes, try to move it to its same position to make sure it still fits there
+        self.move_scroll_block(self.rect.left)
+
     def move_scroll_block(self, new_left_pos):
         new_left_pos = clamp(new_left_pos, self.min_pos, self.max_pos)
         self.rect.left = new_left_pos
