@@ -1,21 +1,35 @@
+import pygame.time
+
 from utils import *
 
 
 class Preview:
-    def __init__(self, rect):
+    def __init__(self, rect, timeline):
         self.rect = rect
+        self.clock = pygame.time.Clock()
+        self.run = True
+        self.timeline = timeline
+        self.current_frame_index = 0
+
+        self.frame_rect = pygame.Rect(PREVIEW_PADDING, PREVIEW_PADDING, rect.width - 2 * PREVIEW_PADDING, rect.width - 2 * PREVIEW_PADDING)
+
+    def start(self):
+        while self.run:
+            self.clock.tick(1)
+
+            self.current_frame_index += 1
+            self.current_frame_index %= len(self.timeline.timeline_frames)
 
     def get_surface(self):
 
         preview_surface = pygame.Surface(self.rect.size)
+        preview_surface.fill(WHITE)
 
-        preview_surface.fill(BLACK)
+        frames = self.timeline.get_frames()
+        frame = frames[self.current_frame_index]
+        frame_surface = frame.get_surface(self.frame_rect)
+        preview_surface.blit(frame_surface, self.frame_rect)
 
-        font = get_font(size=60)
-        text_surface = font.render("Preview", 1, WHITE)
-        preview_surface.blit(text_surface, (
-            self.rect.width / 2 - text_surface.get_width() / 2,
-            self.rect.height / 2 - text_surface.get_height() / 2
-        ))
+        pygame.draw.rect(preview_surface, BLACK, self.frame_rect, PREVIEW_PADDING)
 
         return preview_surface

@@ -15,7 +15,7 @@ class Timeline:
 
         self.timeline_frame_rect = pygame.Rect(0, 0, FRAME_WIDTH, self.rect.height)
 
-        new_frame_button_rect = pygame.Rect(0, 0, FRAME_WIDTH * 0.7, FRAME_WIDTH * 0.7)
+        new_frame_button_rect = pygame.Rect(0, 0, FRAME_WIDTH * 0.5, FRAME_WIDTH * 0.5)
         self.new_frame_button = Button(new_frame_button_rect, WHITE, "New")
         self.new_frame_button.events.on_clicked += self.add_new_frame
 
@@ -68,6 +68,9 @@ class Timeline:
 
         # Fire event
         self.events.on_timeline_frame_deleted(delete_timeline_frame)
+
+    def get_frames(self):
+        return [tf.frame for tf in self.timeline_frames]
 
     def set_active_timeline_frame_index(self, timeline_frame_index):
         timeline_frame_index %= len(self.timeline_frames)

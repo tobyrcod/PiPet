@@ -2,6 +2,7 @@
 # https://www.youtube.com/watch?v=N20eXcfyQ_4
 import pygame
 
+from threading import Thread
 from utils import *
 from elements import *
 
@@ -23,7 +24,10 @@ def main():
     animator = Animator(pygame.Rect(PADDING, 2 * PADDING + CANVAS_HEIGHT, ANIMATOR_WIDTH, ANIMATOR_HEIGHT))
     canvas = Canvas(pygame.Rect(PADDING, PADDING, CANVAS_WIDTH, CANVAS_HEIGHT))
     toolbar = Toolbar(pygame.Rect(2 * PADDING + CANVAS_WIDTH, PADDING, TOOLBAR_WIDTH, TOOLBAR_HEIGHT))
-    preview = Preview(pygame.Rect(2 * PADDING + CANVAS_WIDTH, 2 * PADDING + CANVAS_HEIGHT, PREVIEW_WIDTH, PREVIEW_HEIGHT))
+
+    preview = Preview(pygame.Rect(2 * PADDING + CANVAS_WIDTH, 2 * PADDING + CANVAS_HEIGHT, PREVIEW_WIDTH, PREVIEW_HEIGHT), animator.timeline)  # TODO: use events for when the frames change instead of passing the whole timeline
+    preview_thread = Thread(target=preview.start)
+    preview_thread.start()
 
     animator.timeline.events.on_active_timeline_frame_index_changed += lambda index: canvas.set_frame(animator.timeline.timeline_frames[index].frame)
     animator.timeline.init()
@@ -50,6 +54,7 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
+                preview.run = False
 
             # TODO: make this more elegant (...matrix?)
             mouse_pos = pygame.mouse.get_pos()
