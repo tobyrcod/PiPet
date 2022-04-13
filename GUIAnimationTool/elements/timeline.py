@@ -23,7 +23,7 @@ class Timeline:
         self.content_offset = 0
 
         self.events.on_timeline_frame_added += lambda tf: self.add_content_width(self.timeline_frame_rect.width + FRAME_PADDING)
-        self.events.on_timeline_frame_added += lambda tf: self.set_active_timeline_frame_index(tf.timeline_frame_index)
+        self.events.on_timeline_frame_added += lambda tf: self.set_active_timeline_frame_index(tf.index)
         self.events.on_timeline_frame_added += lambda tf: self.refresh_timeline_frames()
 
     def init(self):
@@ -33,10 +33,10 @@ class Timeline:
         frame = Frame(ROWS, COLS, WHITE)
         timeline_frame = TimelineFrame(pygame.Rect(self.timeline_frame_rect), self, frame)
 
-        timeline_frame.events.on_clicked += lambda a: self.set_active_timeline_frame_index(a.timeline_frame_index)
-        timeline_frame.left_button.events.on_clicked += lambda tf: self.swap_frames(tf, self.timeline_frames[tf.timeline_frame_index - 1])
-        timeline_frame.right_button.events.on_clicked += lambda tf: self.swap_frames(tf, self.timeline_frames[tf.timeline_frame_index + 1])
-        timeline_frame.delete_button.events.on_clicked += lambda tf: print(tf.timeline_frame_index)
+        timeline_frame.events.on_clicked += lambda tf: self.set_active_timeline_frame_index(tf.index)
+        timeline_frame.left_button.events.on_clicked += lambda tf: self.swap_frames(tf, self.timeline_frames[tf.index - 1])
+        timeline_frame.right_button.events.on_clicked += lambda tf: self.swap_frames(tf, self.timeline_frames[tf.index + 1])
+        timeline_frame.delete_button.events.on_clicked += lambda tf: self.delete_frame(tf)
 
         self.timeline_frames.append(timeline_frame)
 
@@ -45,8 +45,20 @@ class Timeline:
     def swap_frames(self, tf_a, tf_b):
         tf_a.frame, tf_b.frame = tf_b.frame, tf_a.frame
 
-        if self.active_timeline_frame_index in (tf_a.timeline_frame_index, tf_b.timeline_frame_index):
-            self.set_active_timeline_frame_index(tf_b.timeline_frame_index)
+        if self.active_timeline_frame_index in (tf_a.index, tf_b.index):
+            self.set_active_timeline_frame_index(tf_b.index)
+
+    def delete_frame(self, timeline_frame):
+        # move the frame we want to delete into the last timeline frame
+        # shuffle everything else down one frame to fill the space
+
+        # For every frame from the next one to the last one
+        for i in range(timeline_frame.index + 1, len(self.timeline_frames)):
+            previous_timeline_frame = self.timeline_frames[i - 1]
+            next_timeline_frame = self.timeline_frames[i]
+
+            previous_timeline_frame.frame, next_timeline_frame.frame = next_timeline_frame.frame, previous_timeline_frame.frame
+
 
     def set_active_timeline_frame_index(self, timeline_frame_index):
         timeline_frame_index %= len(self.timeline_frames)
@@ -107,7 +119,7 @@ class TimelineFrame(IClickable):
         super().__init__(rect)
 
         self.timeline = timeline
-        self.timeline_frame_index = len(timeline.timeline_frames)
+        self.index = len(timeline.timeline_frames)
         self.frame = frame
         self.frame_rect = pygame.Rect(FRAME_PADDING, FRAME_PADDING, rect.width - 2 * FRAME_PADDING, rect.width - 2 * FRAME_PADDING)
 
@@ -141,8 +153,8 @@ class TimelineFrame(IClickable):
         first_index = 0
         last_index = first_index + len(self.timeline.timeline_frames) - 1
 
-        self.left_button.enabled = self.timeline_frame_index != first_index
-        self.right_button.enabled = self.timeline_frame_index != last_index
+        self.left_button.enabled = self.index != first_index
+        self.right_button.enabled = self.index != last_index
         self.delete_button.enabled = first_index != last_index
 
     def get_surface(self, is_active_frame):
