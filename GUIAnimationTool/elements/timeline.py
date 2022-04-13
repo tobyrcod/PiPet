@@ -1,3 +1,5 @@
+import pygame
+
 from utils import *
 from .frame import Frame
 from interfaces import IClickable
@@ -34,6 +36,7 @@ class Timeline:
         timeline_frame.events.on_clicked += lambda a: self.set_active_timeline_frame_index(a.timeline_frame_index)
         timeline_frame.left_button.events.on_clicked += lambda tf: self.swap_frames(tf, self.timeline_frames[tf.timeline_frame_index - 1])
         timeline_frame.right_button.events.on_clicked += lambda tf: self.swap_frames(tf, self.timeline_frames[tf.timeline_frame_index + 1])
+        timeline_frame.delete_button.events.on_clicked += lambda tf: print(tf.timeline_frame_index)
 
         self.timeline_frames.append(timeline_frame)
 
@@ -108,12 +111,15 @@ class TimelineFrame(IClickable):
         self.frame = frame
         self.frame_rect = pygame.Rect(FRAME_PADDING, FRAME_PADDING, rect.width - 2 * FRAME_PADDING, rect.width - 2 * FRAME_PADDING)
 
-        button_rect = pygame.Rect(0, 0, (self.frame_rect.width - FRAME_PADDING) / 2, rect.height - self.frame_rect.height - 3 * FRAME_PADDING)
+        button_rect = pygame.Rect(0, 0, (self.frame_rect.width - FRAME_PADDING) / 2, (rect.height - self.frame_rect.height - 4 * FRAME_PADDING) / 2)
         left_button_rect = pygame.Rect.move(button_rect, self.frame_rect.left, self.frame_rect.bottom + FRAME_PADDING)
         right_button_rect = pygame.Rect.move(left_button_rect, left_button_rect.width + FRAME_PADDING, 0)
 
         self.left_button = Button(left_button_rect, WHITE, "<", BLACK, WHITE)
         self.right_button = Button(right_button_rect, WHITE, ">", BLACK, WHITE)
+
+        delete_button_rect = pygame.Rect(self.frame_rect.left, left_button_rect.bottom + FRAME_PADDING, self.frame_rect.width, rect.height - self.frame_rect.height - button_rect.height - 4 * FRAME_PADDING)
+        self.delete_button = Button(delete_button_rect, WHITE, "DELETE", RED, RED)
 
     def clicked(self, mouse_pos):
         local_pos = np.subtract(mouse_pos, self.rect.topleft)
@@ -126,6 +132,9 @@ class TimelineFrame(IClickable):
             self.right_button.events.on_clicked(self)
             return
 
+        if self.delete_button.enabled and self.delete_button.rect.collidepoint(local_pos):
+            self.delete_button.events.on_clicked(self)
+
         self.events.on_clicked(self)
 
     def refresh(self):
@@ -134,6 +143,7 @@ class TimelineFrame(IClickable):
 
         self.left_button.enabled = self.timeline_frame_index != first_index
         self.right_button.enabled = self.timeline_frame_index != last_index
+        self.delete_button.enabled = first_index != last_index
 
     def get_surface(self, is_active_frame):
 
@@ -150,6 +160,10 @@ class TimelineFrame(IClickable):
         if self.right_button.enabled:
             right_button_surface = self.right_button.get_surface()
             timeline_frame_surface.blit(right_button_surface, self.right_button.rect)
+
+        if self.delete_button.enabled:
+            delete_button_surface = self.delete_button.get_surface()
+            timeline_frame_surface.blit(delete_button_surface, self.delete_button.rect)
 
         if is_active_frame:
             pygame.draw.rect(timeline_frame_surface, RED, (0, 0, *self.rect.size), 5)

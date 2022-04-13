@@ -8,10 +8,10 @@ class Animator:
         self.rect = rect
 
         padding_space = 3 * FRAME_PADDING
-        timeline_rect = pygame.Rect(FRAME_PADDING, FRAME_PADDING, self.rect.width - 2 * FRAME_PADDING, (self.rect.height - padding_space) * 0.7)
+        timeline_rect = pygame.Rect(FRAME_PADDING, FRAME_PADDING, self.rect.width - 2 * FRAME_PADDING, (self.rect.height - padding_space) * 0.875)
         self.timeline = Timeline(timeline_rect)
 
-        scrollbar_rect = pygame.Rect(FRAME_PADDING, timeline_rect.bottom + FRAME_PADDING, timeline_rect.width, (self.rect.height - timeline_rect.height - padding_space) / 2)
+        scrollbar_rect = pygame.Rect(FRAME_PADDING, timeline_rect.bottom + FRAME_PADDING, timeline_rect.width, (self.rect.height - timeline_rect.height - padding_space))
         self.scrollbar = Scrollbar(scrollbar_rect, self.timeline.rect.width, self.timeline.content_width)
 
         self.timeline.events.on_content_width_changed += self.scrollbar.set_content_width
