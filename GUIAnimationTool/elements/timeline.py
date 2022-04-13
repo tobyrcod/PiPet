@@ -6,8 +6,7 @@ from interfaces import IClickable
 class Timeline:
     def __init__(self, rect):
         self.rect = rect
-        
-        self.frames = []
+
         self.timeline_frames = []
         self.active_timeline_frame_index = -1
         self.events = TimelineEvents()
@@ -25,12 +24,10 @@ class Timeline:
         self.add_new_frame()
 
     def add_new_frame(self):
-        new_timeline_frame_index = new_frame_index = len(self.frames)
+        new_timeline_frame_index = len(self.timeline_frames)
 
         frame = Frame(ROWS, COLS, WHITE)
-        self.frames.append(frame)
-
-        timeline_frame = TimelineFrame(pygame.Rect(self.timeline_frame_rect), new_timeline_frame_index, new_frame_index)
+        timeline_frame = TimelineFrame(pygame.Rect(self.timeline_frame_rect), new_timeline_frame_index, frame)
         timeline_frame.events.on_clicked += lambda a: self.set_active_timeline_frame_index(a.timeline_frame_index)
         self.timeline_frames.append(timeline_frame)
         self.set_content_width(self.content_width + timeline_frame.rect.width + FRAME_PADDING)
@@ -74,7 +71,7 @@ class Timeline:
         i = -1
         for i, timeline_frame in enumerate(self.timeline_frames):
             timeline_frame.rect.topleft = (i * (FRAME_WIDTH + FRAME_PADDING), 0)
-            timeline_frame_surface = timeline_frame.get_surface(self.frames, i == self.active_timeline_frame_index)
+            timeline_frame_surface = timeline_frame.get_surface(i == self.active_timeline_frame_index)
             content_surface.blit(timeline_frame_surface, timeline_frame.rect)
 
         # Add new frame button
@@ -88,21 +85,20 @@ class Timeline:
 
 
 class TimelineFrame(IClickable):
-    def __init__(self, rect, timeline_frame_index, frame_index):
+    def __init__(self, rect, timeline_frame_index, frame):
         super().__init__(rect)
 
         self.timeline_frame_index = timeline_frame_index
-        self.frame_index = frame_index
+        self.frame = frame
         self.frame_rect = pygame.Rect(FRAME_PADDING, FRAME_PADDING, rect.width - 2 * FRAME_PADDING, rect.width - 2 * FRAME_PADDING)
 
-    def get_surface(self, frames, is_active_frame):
+    def get_surface(self, is_active_frame):
 
         timeline_frame_surface = pygame.Surface(self.rect.size)
 
         timeline_frame_surface.fill(BLACK)
 
-        frame = frames[self.frame_index]
-        frame_surface = frame.get_surface(self.frame_rect)
+        frame_surface = self.frame.get_surface(self.frame_rect)
         timeline_frame_surface.blit(frame_surface, self.frame_rect)
 
         if is_active_frame:

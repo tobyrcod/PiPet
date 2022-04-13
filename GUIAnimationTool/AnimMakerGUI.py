@@ -25,7 +25,7 @@ def main():
     toolbar = Toolbar(pygame.Rect(2 * PADDING + CANVAS_WIDTH, PADDING, TOOLBAR_WIDTH, TOOLBAR_HEIGHT))
     preview = Preview(pygame.Rect(2 * PADDING + CANVAS_WIDTH, 2 * PADDING + CANVAS_HEIGHT, PREVIEW_WIDTH, PREVIEW_HEIGHT))
 
-    animator.timeline.events.on_active_timeline_frame_index_changed += lambda index: canvas.set_frame(animator.timeline.frames[index])
+    animator.timeline.events.on_active_timeline_frame_index_changed += lambda index: canvas.set_frame(animator.timeline.timeline_frames[index].frame)
     animator.timeline.init()
 
     for button in toolbar.color_buttons:
