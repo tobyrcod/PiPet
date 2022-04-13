@@ -42,7 +42,7 @@ class Timeline:
     def swap_frames(self, tf_a, tf_b):
         tf_a.frame, tf_b.frame = tf_b.frame, tf_a.frame
 
-        if self.active_timeline_frame_index == tf_a.timeline_frame_index:
+        if self.active_timeline_frame_index in (tf_a.timeline_frame_index, tf_b.timeline_frame_index):
             self.set_active_timeline_frame_index(tf_b.timeline_frame_index)
 
     def set_active_timeline_frame_index(self, timeline_frame_index):
