@@ -58,3 +58,8 @@ WIDTH, HEIGHT = PADDING + CANVAS_WIDTH + PADDING + TOOLBAR_WIDTH + PADDING, \
 # Methods
 def get_font(size):
     return pygame.font.SysFont(FONT_NAME, size)
+
+
+def clamp(n, smallest, largest):
+    return max(smallest, min(n, largest))
+

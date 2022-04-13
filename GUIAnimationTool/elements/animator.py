@@ -2,12 +2,13 @@ from utils import *
 from .timeline import Timeline
 from.scrollbar import Scrollbar
 
+
 class Animator:
     def __init__(self, rect):
         self.rect = rect
 
-        padding_space = 4 * FRAME_PADDING
-        timeline_rect = pygame.Rect(FRAME_PADDING, FRAME_PADDING, self.rect.width - 2 * FRAME_PADDING, (self.rect.height - padding_space) * 0.8)
+        padding_space = 3 * FRAME_PADDING
+        timeline_rect = pygame.Rect(FRAME_PADDING, FRAME_PADDING, self.rect.width - 2 * FRAME_PADDING, (self.rect.height - padding_space) * 0.7)
         self.timeline = Timeline(timeline_rect)
 
         scrollbar_rect = pygame.Rect(FRAME_PADDING, timeline_rect.bottom + FRAME_PADDING, timeline_rect.width, (self.rect.height - timeline_rect.height - padding_space) / 2)
@@ -20,6 +21,15 @@ class Animator:
 
         if self.timeline.rect.collidepoint(local_pos):
             self.timeline.clicked(local_pos)
+        elif self.scrollbar.rect.collidepoint(local_pos):
+            self.scrollbar.clicked(local_pos)
+
+    # TODO: USE EVENTS INSTEAD OF THIS NESTING HELL
+    def held(self, mouse_pos):
+        local_pos = np.subtract(mouse_pos, self.rect.topleft)
+
+        if self.scrollbar.rect.collidepoint(local_pos):
+            self.scrollbar.held(local_pos)
 
     def get_surface(self):
 

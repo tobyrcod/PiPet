@@ -63,6 +63,8 @@ def main():
             elif pygame.mouse.get_pressed()[0]:  # if the left mouse button is held
                 if canvas.rect.collidepoint(mouse_pos):
                     canvas.clicked(mouse_pos)
+                elif animator.rect.collidepoint(mouse_pos):
+                    animator.held(mouse_pos)
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
                     animator.timeline.set_active_timeline_frame_index(animator.timeline.active_timeline_frame_index - 1)
