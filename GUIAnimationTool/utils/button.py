@@ -3,12 +3,14 @@ from interfaces import IClickable
 
 
 class Button(IClickable):
-    def __init__(self, rect, color, text=None, text_color=BLACK):
+    def __init__(self, rect, color, text=None, text_color=BLACK, border_color=BLACK):
         super().__init__(rect)
 
         self.color = color
         self.text = text
         self.text_color = text_color
+        self.border_color = border_color
+        self.enabled = True
 
     def get_surface(self, is_active=False):
         button_surface = pygame.Surface(self.rect.size)
@@ -16,9 +18,9 @@ class Button(IClickable):
         button_surface.fill(self.color)
 
         if self.text:
-            # Outline
-            outline_color = RED if is_active else BLACK
-            pygame.draw.rect(button_surface, outline_color, (0, 0, *self.rect.size), 3)
+            # Border
+            border_color = RED if is_active else self.border_color
+            pygame.draw.rect(button_surface, border_color, (0, 0, *self.rect.size), 3)
 
             # Button Text
             button_font = get_font(size=22)
