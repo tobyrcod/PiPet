@@ -46,6 +46,9 @@ class Timeline:
         self.content_width = width
         self.events.on_content_width_changed(self.content_width)
 
+    def set_content_offset(self, offset):
+        self.content_offset = offset
+
     def clicked(self, mouse_pos):
         local_pos = np.subtract(mouse_pos, self.rect.topleft)
         local_pos = np.add(local_pos, (self.content_offset, 0))

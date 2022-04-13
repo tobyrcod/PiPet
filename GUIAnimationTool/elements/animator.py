@@ -15,6 +15,8 @@ class Animator:
         self.scrollbar = Scrollbar(scrollbar_rect, self.timeline.rect.width, self.timeline.content_width)
 
         self.timeline.events.on_content_width_changed += self.scrollbar.set_content_width
+        self.timeline.new_frame_button.events.on_clicked += lambda: self.scrollbar.scroll_block.move_scroll_block(99999)
+        self.scrollbar.events.on_offset_changed += self.timeline.set_content_offset
 
     def clicked(self, mouse_pos):
         local_pos = np.subtract(mouse_pos, self.rect.topleft)
