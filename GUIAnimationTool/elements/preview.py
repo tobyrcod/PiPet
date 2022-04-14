@@ -20,13 +20,15 @@ class Preview:
             self.current_frame_index += 1
             self.current_frame_index %= len(self.timeline.timeline_frames)
 
+    def reset(self):
+        self.current_frame_index = 0
+
     def get_surface(self):
 
         preview_surface = pygame.Surface(self.rect.size)
         preview_surface.fill(WHITE)
 
-        frames = self.timeline.get_frames()
-        frame = frames[self.current_frame_index]
+        frame = self.timeline.timeline_frames[self.current_frame_index].frame
         frame_surface = frame.get_surface(self.frame_rect)
         preview_surface.blit(frame_surface, self.frame_rect)
 

@@ -30,6 +30,8 @@ def main():
     preview_thread.start()
 
     animator.timeline.events.on_active_timeline_frame_index_changed += lambda index: canvas.set_frame(animator.timeline.timeline_frames[index].frame)
+    animator.timeline.events.on_timeline_frame_added += lambda tf: preview.reset()
+    animator.timeline.events.on_timeline_frame_deleted += lambda tf: preview.reset()
     animator.timeline.init()
 
     for button in toolbar.color_buttons:
@@ -46,6 +48,7 @@ def main():
     toolbar.brush_buttons['Fill'].events.on_clicked += lambda b: canvas.set_to_fill()
 
     toolbar.other_buttons['Clear'].events.on_clicked += lambda b: canvas.clear()
+
 
     run = True
     while run:

@@ -78,7 +78,6 @@ class Timeline:
         self.events.on_active_timeline_frame_index_changed(self.active_timeline_frame_index)
 
     def handle_active_timeline_index_on_delete(self, deleted_index):
-        print(f'active: {self.active_timeline_frame_index}, del: {deleted_index}')
         if self.active_timeline_frame_index == deleted_index:
             if deleted_index == len(self.timeline_frames):
                 self.set_active_timeline_frame_index(self.active_timeline_frame_index - 1)
