@@ -11,7 +11,6 @@ WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("PiPet Animation Maker")
 clock = pygame.time.Clock()
 
-
 # Main game Loop
 def main():
     def check_for_erase_button_active():
@@ -44,11 +43,16 @@ def main():
 
     toolbar.other_buttons['Clear'].events.on_clicked += lambda b: canvas.clear()
 
+    # Create TextInput-object
     run = True
     while run:
         clock.tick(FPS)
 
-        for event in pygame.event.get():
+        events = pygame.event.get()
+
+        preview.update(events)
+
+        for event in events:
             if event.type == pygame.QUIT:
                 run = False
                 preview.pause()
@@ -74,13 +78,13 @@ def main():
                     animator.timeline.set_active_timeline_frame_index(animator.timeline.active_timeline_frame_index - 1)
                 elif event.key == pygame.K_RIGHT:
                     animator.timeline.set_active_timeline_frame_index(animator.timeline.active_timeline_frame_index + 1)
-                elif event.key == pygame.K_1:
+                elif event.key == pygame.K_q:
                     button = toolbar.brush_buttons['Brush']
                     button.events.on_clicked(button)
-                elif event.key == pygame.K_2:
+                elif event.key == pygame.K_w:
                     button = toolbar.brush_buttons['Fill']
                     button.events.on_clicked(button)
-                elif event.key == pygame.K_3:
+                elif event.key == pygame.K_e:
                     button = toolbar.brush_buttons['Erase']
                     button.events.on_clicked(button)
 

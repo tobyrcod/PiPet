@@ -7,23 +7,35 @@ class Preview:
     def __init__(self, rect, timeline):
         self.rect = rect
         self.run = False
+        self.fps = 1
         self.timeline = timeline
         self.current_frame_index = 0
 
         self.frame_rect = pygame.Rect(PREVIEW_PADDING, PREVIEW_PADDING, rect.width - 2 * PREVIEW_PADDING, rect.width - 2 * PREVIEW_PADDING)
         self.options_rect = pygame.Rect(PREVIEW_PADDING, self.frame_rect.bottom + FRAME_PADDING, self.frame_rect.width, rect.height - self.frame_rect.height - 3 * PREVIEW_PADDING)
 
-        playpause_button_rect = pygame.Rect(0, 0, self.options_rect.height * 1.5, self.options_rect.height)
+        playpause_button_rect = pygame.Rect(0, 0, self.options_rect.height * 1.7, self.options_rect.height)
         playpause_button_rect.bottomright = self.options_rect.bottomright
         self.playpause_button = Button(playpause_button_rect, WHITE, 'PLAY')
 
-        fps_input_rect = pygame.Rect(0, 0, self.options_rect.width - playpause_button_rect.width, playpause_button_rect.height)
-        fps_input_rect.bottomright = playpause_button_rect.bottomleft
-        self.fps_input = NumberInput(fps_input_rect, 'FPS')
+        self.fps_input_rect = pygame.Rect(0, 0, self.options_rect.width - playpause_button_rect.width, playpause_button_rect.height)
+        self.fps_input_rect.bottomright = playpause_button_rect.bottomleft
+
+        fps_input_manager = TextInputManager(
+            initial='1',
+            validator=lambda input: input == '' or (input.isdigit() and 1 <= int(input) <= 20)
+        )
+        self.fps_input = create_text_input(50, BLACK, fps_input_manager)
 
         self.thread = None
         self.clock = None
         self.playpause_button.events.on_clicked += self.play
+
+    def update(self, events):
+        self.fps_input.update(events)
+
+        fps_value = self.fps_input.value
+        self.fps = 1 if fps_value == '' else int(fps_value)
 
     def clicked(self, mouse_pos):
         local_pos = np.subtract(mouse_pos, self.rect.topleft)
@@ -36,6 +48,7 @@ class Preview:
             self.playpause_button.events.on_clicked.remove_all_callbacks()
             self.playpause_button.events.on_clicked += self.pause
 
+            self.playpause_button.text = 'PAUSE'
             self.run = True
             self.thread = Thread(target=self.running)
             self.clock = pygame.time.Clock()
@@ -46,8 +59,9 @@ class Preview:
             self.current_frame_index += 1
             self.current_frame_index %= len(self.timeline.timeline_frames)
 
-            self.clock.tick(1)
+            self.clock.tick(self.fps)
 
+        self.playpause_button.text = 'PLAY'
         self.thread = None
         self.clock = None
 
@@ -75,7 +89,7 @@ class Preview:
 
         # Options
         options_surface = pygame.Surface(self.options_rect.size)
-        options_surface.fill(BLACK)
+        options_surface.fill(WHITE)
         preview_surface.blit(options_surface, self.options_rect)
 
         # Options -> Play/Pause Button
@@ -83,19 +97,8 @@ class Preview:
         preview_surface.blit(playpause_button_surface, self.playpause_button.rect)
 
         # Options -> FPS input
-        fps_input_surface = self.fps_input.get_surface()
-        preview_surface.blit(fps_input_surface, self.fps_input.rect)
+        fps_input_surface = self.fps_input.surface
+        preview_surface.blit(fps_input_surface, self.fps_input_rect)
 
         return preview_surface
-
-
-class NumberInput:
-    def __init__(self, rect, label_text):
-        self.rect = rect
-        self.label_text = label_text
-
-    def get_surface(self):
-        number_input_surface = pygame.Surface(self.rect.size)
-        number_input_surface.fill(BLUE)
-        return number_input_surface
 
