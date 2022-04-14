@@ -1,8 +1,6 @@
 # Based on 'Make Paint in Python'
 # https://www.youtube.com/watch?v=N20eXcfyQ_4
 import pygame
-
-from threading import Thread
 from utils import *
 from elements import *
 
@@ -24,14 +22,11 @@ def main():
     animator = Animator(pygame.Rect(PADDING, 2 * PADDING + CANVAS_HEIGHT, ANIMATOR_WIDTH, ANIMATOR_HEIGHT))
     canvas = Canvas(pygame.Rect(PADDING, PADDING, CANVAS_WIDTH, CANVAS_HEIGHT))
     toolbar = Toolbar(pygame.Rect(2 * PADDING + CANVAS_WIDTH, PADDING, TOOLBAR_WIDTH, TOOLBAR_HEIGHT))
-
     preview = Preview(pygame.Rect(2 * PADDING + CANVAS_WIDTH, 2 * PADDING + CANVAS_HEIGHT, PREVIEW_WIDTH, PREVIEW_HEIGHT), animator.timeline)  # TODO: use events for when the frames change instead of passing the whole timeline
-    preview_thread = Thread(target=preview.start)
-    preview_thread.start()
 
     animator.timeline.events.on_active_timeline_frame_index_changed += lambda index: canvas.set_frame(animator.timeline.timeline_frames[index].frame)
-    animator.timeline.events.on_timeline_frame_added += lambda tf: preview.reset()
-    animator.timeline.events.on_timeline_frame_deleted += lambda tf: preview.reset()
+    animator.timeline.events.on_timeline_frame_added += lambda tf: preview.go_to_beginning()
+    animator.timeline.events.on_timeline_frame_deleted += lambda tf: preview.go_to_beginning()
     animator.timeline.init()
 
     for button in toolbar.color_buttons:
@@ -49,7 +44,6 @@ def main():
 
     toolbar.other_buttons['Clear'].events.on_clicked += lambda b: canvas.clear()
 
-
     run = True
     while run:
         clock.tick(FPS)
@@ -57,7 +51,7 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
-                preview.run = False
+                preview.pause()
 
             # TODO: make this more elegant (...matrix?)
             mouse_pos = pygame.mouse.get_pos()
@@ -68,6 +62,8 @@ def main():
                     canvas.clicked(mouse_pos)
                 elif animator.rect.collidepoint(mouse_pos):
                     animator.clicked(mouse_pos)
+                elif preview.rect.collidepoint(mouse_pos):
+                    preview.clicked(mouse_pos)
             elif pygame.mouse.get_pressed()[0]:  # if the left mouse button is held
                 if canvas.rect.collidepoint(mouse_pos):
                     canvas.clicked(mouse_pos)
