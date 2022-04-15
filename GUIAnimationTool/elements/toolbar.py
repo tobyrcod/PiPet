@@ -14,10 +14,10 @@ class Toolbar:
 
         print(COLOR_PALETTE_DICT)
 
-        for i, color_key in enumerate(COLOR_PALETTE_DICT.keys()):
-            button = ColorPaletteButton(pygame.Rect(TOOLBAR_PADDING + (i % TOOLBAR_COLUMNS) * (TOOLBAR_PADDING + button_width),
+        for i, color in enumerate(COLOR_PALETTE_DICT.values()):
+            button = Button(pygame.Rect(TOOLBAR_PADDING + (i % TOOLBAR_COLUMNS) * (TOOLBAR_PADDING + button_width),
                                         TOOLBAR_PADDING + (i // TOOLBAR_COLUMNS) * (TOOLBAR_PADDING + button_height),
-                                        button_width, button_height), color_key)
+                                        button_width, button_height), color)
             self.color_buttons.append(button)
 
         self.brush_buttons = {}
