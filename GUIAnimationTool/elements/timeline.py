@@ -33,8 +33,10 @@ class Timeline:
     def init(self):
         self.add_new_frame()
 
-    def add_new_frame(self):
-        frame = Frame(ROWS, COLS, WHITE)
+    def add_new_frame(self, frame=None):
+        if frame is None:
+            frame = Frame(ROWS, COLS, WHITE)
+
         timeline_frame = TimelineFrame(pygame.Rect(self.timeline_frame_rect), self, frame)
 
         timeline_frame.events.on_clicked += lambda tf: self.set_active_timeline_frame_index(tf.index)
@@ -71,6 +73,17 @@ class Timeline:
 
     def get_frames(self):
         return [tf.frame for tf in self.timeline_frames]
+
+    def load_grids(self, grids):
+        self.timeline_frames = []
+
+        for grid in grids:
+            frame = Frame(ROWS, COLS, WHITE)
+            frame.set_grid(grid)
+            self.add_new_frame(frame)
+
+        self.set_active_timeline_frame_index(0)
+
 
     def set_active_timeline_frame_index(self, timeline_frame_index):
         timeline_frame_index %= len(self.timeline_frames)

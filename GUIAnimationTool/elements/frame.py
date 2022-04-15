@@ -42,6 +42,9 @@ class Frame:
         self.flood_fill_pixel(x, y + 1, fill_color, original_color)
         self.flood_fill_pixel(x, y - 1, fill_color, original_color)
 
+    def set_grid(self, grid):
+        self.grid = grid
+
     def clear(self):
         self.grid = init_grid(self.rows, self.cols, self.start_color)
 

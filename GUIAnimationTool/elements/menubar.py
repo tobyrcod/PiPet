@@ -29,6 +29,10 @@ class MenuBar:
 
         if file is not None:
             anim_data = json.load(file)
+
+            grids = anim_data["faces"]
+            self.timeline.load_grids(grids)
+            
             fps = int(1 / float(anim_data["delay"]))
             self.preview.set_fps(fps)
 
