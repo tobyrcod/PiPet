@@ -19,22 +19,9 @@ def prompt_open_file():
     root.withdraw()
     root.title("Animation Tool")
 
+    files = [('PiPet Animation Files', '*.pipet')]
+
     file = tkinter.filedialog.askopenfile(
-        initialdir="/",
-        title="Select a file"
-    )
-    root.destroy()
-
-    return file
-
-def prompt_save_file():
-    root = tkinter.Tk()
-    root.withdraw()
-    root.title("Animation Tool")
-
-    files = [('All Files', '*.pipet')]
-
-    file = tkinter.filedialog.asksaveasfile(
         initialdir=os.path.curdir + "/animation_files",
         title="Select a file",
         filetypes=files,
@@ -42,4 +29,21 @@ def prompt_save_file():
     )
     root.destroy()
 
-    return file, Path(file.name).stem
+    return file, None if file is None else Path(file.name).stem
+
+def prompt_save_file():
+    root = tkinter.Tk()
+    root.withdraw()
+    root.title("Animation Tool")
+
+    files = [('PiPet Animation Files', '*.pipet')]
+
+    file = tkinter.filedialog.asksaveasfile(
+        initialdir=os.path.curdir + "/animation_files",
+        title="Create a file",
+        filetypes=files,
+        defaultextension=files
+    )
+    root.destroy()
+
+    return file, None if file is None else Path(file.name).stem
