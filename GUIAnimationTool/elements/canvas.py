@@ -19,15 +19,15 @@ class Canvas(IClickable):
         self.pixel_size = self.rect.width // frame.rows
 
     def set_to_brush(self):
-        self.events.on_clicked.remove_all_callbacks()
+        clear_event(self.events.on_clicked)
         self.events.on_clicked += lambda coord: self.frame.paint_pixel(*coord, self.draw_color)
 
     def set_to_fill(self):
-        self.events.on_clicked.remove_all_callbacks()
+        clear_event(self.events.on_clicked)
         self.events.on_clicked += lambda coord: self.frame.flood_fill_pixel(*coord, self.draw_color)
 
     def set_to_erase(self):
-        self.events.on_clicked.remove_all_callbacks()
+        clear_event(self.events.on_clicked)
         self.events.on_clicked += lambda coord: self.frame.paint_pixel(*coord, WHITE)
 
     def get_coord_from_pos(self, pos):

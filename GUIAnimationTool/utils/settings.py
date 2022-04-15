@@ -1,4 +1,5 @@
 import pygame
+import os
 from .file_handler import *
 from collections import namedtuple
 from events import Events
@@ -41,6 +42,10 @@ TOOLBAR_PADDING = 10
 # Animator Settings
 ANIMATOR_WIDTH, ANIMATOR_HEIGHT = TOOLBAR_WIDTH + CANVAS_WIDTH - PREVIEW_WIDTH, PREVIEW_HEIGHT
 
+# Menu Bar
+MENU_BAR_WIDTH, MENU_BAR_HEIGHT = PADDING + CANVAS_WIDTH + PADDING + TOOLBAR_WIDTH + PADDING, \
+                                  50
+
 # Scrollbar
 SCROLL_PADDING = 4
 
@@ -57,5 +62,5 @@ Vector2 = namedtuple('Vector2', 'x y')
 
 # Pygame Settings
 FPS = 60
-WIDTH, HEIGHT = PADDING + CANVAS_WIDTH + PADDING + TOOLBAR_WIDTH + PADDING, \
-                PADDING + CANVAS_HEIGHT + PADDING + PREVIEW_HEIGHT + PADDING
+WIDTH, HEIGHT = MENU_BAR_WIDTH, \
+                PADDING + MENU_BAR_HEIGHT + PADDING + CANVAS_HEIGHT + PADDING + PREVIEW_HEIGHT + PADDING

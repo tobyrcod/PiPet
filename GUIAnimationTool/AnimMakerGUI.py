@@ -20,10 +20,11 @@ def main():
             button = toolbar.brush_buttons['Brush']
             button.events.on_clicked(button)
 
-    animator = Animator(pygame.Rect(PADDING, 2 * PADDING + CANVAS_HEIGHT, ANIMATOR_WIDTH, ANIMATOR_HEIGHT))
-    canvas = Canvas(pygame.Rect(PADDING, PADDING, CANVAS_WIDTH, CANVAS_HEIGHT))
-    toolbar = Toolbar(pygame.Rect(2 * PADDING + CANVAS_WIDTH, PADDING, TOOLBAR_WIDTH, TOOLBAR_HEIGHT))
-    preview = Preview(pygame.Rect(2 * PADDING + CANVAS_WIDTH, 2 * PADDING + CANVAS_HEIGHT, PREVIEW_WIDTH, PREVIEW_HEIGHT), animator.timeline)  # TODO: use events for when the frames change instead of passing the whole timeline
+    menu_bar = MenuBar(pygame.Rect(0, 0, MENU_BAR_WIDTH, MENU_BAR_HEIGHT))
+    canvas = Canvas(pygame.Rect(PADDING, PADDING + MENU_BAR_HEIGHT, CANVAS_WIDTH, CANVAS_HEIGHT))
+    animator = Animator(pygame.Rect(PADDING, PADDING + canvas.rect.bottom, ANIMATOR_WIDTH, ANIMATOR_HEIGHT))
+    toolbar = Toolbar(pygame.Rect(canvas.rect.right + PADDING, canvas.rect.top, TOOLBAR_WIDTH, TOOLBAR_HEIGHT))
+    preview = Preview(pygame.Rect(animator.rect.right + PADDING, animator.rect.top, PREVIEW_WIDTH, PREVIEW_HEIGHT), animator.timeline)  # TODO: use events for when the frames change instead of passing the whole timeline
 
     animator.timeline.events.on_active_timeline_frame_index_changed += lambda index: canvas.set_frame(animator.timeline.timeline_frames[index].frame)
     animator.timeline.events.on_timeline_frame_added += lambda tf: preview.go_to_beginning()
@@ -64,7 +65,9 @@ def main():
             # TODO: make this more elegant (...matrix?)
             mouse_pos = pygame.mouse.get_pos()
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:  # if the left mouse button is clicked
-                if toolbar.rect.collidepoint(mouse_pos):
+                if menu_bar.rect.collidepoint(mouse_pos):
+                    menu_bar.clicked(mouse_pos)
+                elif toolbar.rect.collidepoint(mouse_pos):
                     toolbar.clicked(mouse_pos)
                 elif canvas.rect.collidepoint(mouse_pos):
                     canvas.clicked(mouse_pos)
@@ -92,7 +95,7 @@ def main():
                     button = toolbar.brush_buttons['Erase']
                     button.events.on_clicked(button)
 
-        draw(WIN, canvas, toolbar, animator, preview)
+        draw(WIN, canvas, toolbar, animator, preview, menu_bar)
 
     pygame.quit()
 
@@ -100,7 +103,7 @@ def main():
 # TODO?: Instead of redrawing the
 #  whole grid just redraw the pixels (if any) that change this frame. '?' because this is just for optimisation,
 #  and realistically that doesn't matter at all for this simple use case
-def draw(win, canvas, toolbar, animator, preview):
+def draw(win, canvas, toolbar, animator, preview, menu_bar):
 
     win.fill(DARK_BLUE)
 
@@ -115,6 +118,9 @@ def draw(win, canvas, toolbar, animator, preview):
 
     preview_surface = preview.get_surface()
     win.blit(preview_surface, preview.rect)
+
+    menu_bar_surface = menu_bar.get_surface()
+    win.blit(menu_bar_surface, menu_bar.rect)
 
     pygame.display.update()
 

@@ -3,3 +3,4 @@ from .toolbar import Toolbar
 from .animator import Animator
 from .frame import Frame
 from .preview import Preview
+from .menubar import MenuBar

@@ -24,3 +24,7 @@ def create_text_input(font_size, font_color, manager):
     )
 
     return textinput_custom
+
+
+def clear_event(event):
+    event.targets = []
