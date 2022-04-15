@@ -3,6 +3,7 @@ import json
 import tkinter
 import tkinter.filedialog
 import os
+from pathlib import Path
 
 def get_color_dict(filepath):
     colors_file = open(filepath, 'r')
@@ -41,4 +42,4 @@ def prompt_save_file():
     )
     root.destroy()
 
-    return file
+    return file, Path(file.name).stem
