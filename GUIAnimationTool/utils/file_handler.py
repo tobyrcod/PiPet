@@ -32,7 +32,7 @@ def prompt_save_file():
     root.withdraw()
     root.title("Animation Tool")
 
-    files = [('All Files', '*.json')]
+    files = [('All Files', '*.pipet')]
 
     file = tkinter.filedialog.asksaveasfile(
         initialdir=os.path.curdir + "/animation_files",
