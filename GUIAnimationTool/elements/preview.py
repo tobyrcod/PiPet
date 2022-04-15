@@ -1,3 +1,4 @@
+import numpy as np
 import pygame.time
 from threading import Thread
 from utils import *
@@ -18,8 +19,14 @@ class Preview:
         playpause_button_rect.bottomright = self.options_rect.bottomright
         self.playpause_button = Button(playpause_button_rect, WHITE, 'PLAY')
 
-        self.fps_input_rect = pygame.Rect(0, 0, self.options_rect.width - playpause_button_rect.width, playpause_button_rect.height)
-        self.fps_input_rect.bottomright = playpause_button_rect.bottomleft
+        self.fps_input_rect = pygame.Rect(0, 0, self.options_rect.width - playpause_button_rect.width * 2 + PREVIEW_PADDING, playpause_button_rect.height)
+        self.fps_input_rect.bottomright = np.add(playpause_button_rect.bottomleft, (1 * PREVIEW_PADDING, 0))
+
+        self.fps_label_rect = pygame.Rect(0, 0, rect.width - 3 * PREVIEW_PADDING - self.fps_input_rect.width - playpause_button_rect.width, self.fps_input_rect.height)
+        fps_label_font = get_font(size=40)
+        self.fps_label_surface = fps_label_font.render('FPS:', 1, BLACK)
+        self.fps_label_rect.bottom = np.add(self.fps_input_rect.bottom, self.fps_label_surface.get_height() / 4)
+        self.fps_label_rect.left = self.frame_rect.left
 
         fps_input_manager = TextInputManager(
             initial='1',
@@ -95,6 +102,9 @@ class Preview:
         # Options -> Play/Pause Button
         playpause_button_surface = self.playpause_button.get_surface()
         preview_surface.blit(playpause_button_surface, self.playpause_button.rect)
+
+        # Options -> FPS Label
+        preview_surface.blit(self.fps_label_surface, self.fps_label_rect)
 
         # Options -> FPS input
         fps_input_surface = self.fps_input.surface
