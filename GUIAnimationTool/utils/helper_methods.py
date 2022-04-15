@@ -1,6 +1,7 @@
 from .settings import *
 from pygame_textinput import TextInputVisualizer, TextInputManager
 
+
 def get_font(size):
     return pygame.font.SysFont(FONT_NAME, size)
 

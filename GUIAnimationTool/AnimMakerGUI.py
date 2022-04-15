@@ -1,5 +1,7 @@
 # Based on 'Make Paint in Python'
 # https://www.youtube.com/watch?v=N20eXcfyQ_4
+import os.path
+
 import pygame
 from utils import *
 from elements import *
@@ -42,6 +44,8 @@ def main():
     toolbar.brush_buttons['Fill'].events.on_clicked += lambda b: canvas.set_to_fill()
 
     toolbar.other_buttons['Clear'].events.on_clicked += lambda b: canvas.clear()
+
+    toolbar.color_buttons[0].events.on_clicked(toolbar.color_buttons[0])
 
     # Create TextInput-object
     run = True
@@ -98,7 +102,7 @@ def main():
 #  and realistically that doesn't matter at all for this simple use case
 def draw(win, canvas, toolbar, animator, preview):
 
-    win.fill(CREAM)
+    win.fill(DARK_BLUE)
 
     canvas_surface = canvas.get_surface()
     win.blit(canvas_surface, canvas.rect)

@@ -36,3 +36,10 @@ class Button(IClickable):
                 pygame.draw.rect(button_surface, WHITE, (2, 2, self.rect.width - 4, self.rect.height - 4), 2)
         return button_surface
 
+
+class ColorPaletteButton(Button):
+    def __init__(self, rect, color_id):
+        self.color_id = color_id
+        super().__init__(rect, COLOR_PALETTE_DICT[color_id])
+
+

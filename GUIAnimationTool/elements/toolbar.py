@@ -1,24 +1,24 @@
 from utils import *
 
 
-# TODO?: Add a Floodfill button. '?' because we probably dont need one but its cool
 # TODO?: Add an Undo button. '?' because we probably dont need one but its cool
 class Toolbar:
     def __init__(self, rect):
         self.rect = rect
-        colors = [BLACK, RED, BLUE, GREEN]
 
         padding_count = TOOLBAR_COLUMNS + 1
         padded_space = TOOLBAR_PADDING * padding_count
         button_space = self.rect.width - padded_space
         button_width = button_height = button_space // TOOLBAR_COLUMNS
         self.color_buttons = []
-        for i, color in enumerate(colors):
-            button = Button(pygame.Rect(TOOLBAR_PADDING + (i % TOOLBAR_COLUMNS) * (TOOLBAR_PADDING + button_width),
+
+        print(COLOR_PALETTE_DICT)
+
+        for i, color_key in enumerate(COLOR_PALETTE_DICT.keys()):
+            button = ColorPaletteButton(pygame.Rect(TOOLBAR_PADDING + (i % TOOLBAR_COLUMNS) * (TOOLBAR_PADDING + button_width),
                                         TOOLBAR_PADDING + (i // TOOLBAR_COLUMNS) * (TOOLBAR_PADDING + button_height),
-                                        button_width, button_height), color)
+                                        button_width, button_height), color_key)
             self.color_buttons.append(button)
-        self.active_color_button = self.color_buttons[0]
 
         self.brush_buttons = {}
         for i, name in enumerate(["Brush", "Fill", "Erase"]):
@@ -40,7 +40,6 @@ class Toolbar:
 
     def set_active_color_button(self, button):
         self.active_color_button = button
-        print(self.active_color_button)
 
     def set_active_brush_button(self, button):
         self.active_brush_button = button
@@ -58,7 +57,7 @@ class Toolbar:
 
         toolbar_surface = pygame.Surface(self.rect.size)
 
-        toolbar_surface.fill(WHITE)
+        toolbar_surface.fill(CREAM)
 
         for button in self.color_buttons:
             button_surface = button.get_surface(button == self.active_color_button)

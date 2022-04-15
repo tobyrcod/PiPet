@@ -1,19 +1,22 @@
 import pygame
+from .file_handler import *
 from collections import namedtuple
 from events import Events
 pygame.init()
 pygame.font.init()
 
+
 # Palette Colors
-WHITE = (255, 255, 255)
-GREY = (100, 100, 100)
-BLACK = (0, 0, 0)
-RED = (255, 0, 0)
-GREEN = (0, 255, 0)
-BLUE = (0, 0, 255)
+COLOR_PALETTE_DICT = get_color_dict(os.path.abspath('../DisplayController/colors.json'))
 
 # Menu Settings
 PADDING = 15
+WHITE = COLOR_PALETTE_DICT["w"]
+BLACK = COLOR_PALETTE_DICT["bk"]
+RED = COLOR_PALETTE_DICT["r"]
+GREEN = COLOR_PALETTE_DICT["g"]
+BLUE = COLOR_PALETTE_DICT['be']
+GREY = [100, 100, 100]
 
 # Frame Settings
 ROWS = COLS = 8
