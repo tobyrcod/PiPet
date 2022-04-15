@@ -1,6 +1,8 @@
+from fileinput import filename
 import json
 import tkinter
-
+import tkinter.filedialog
+import os
 
 def get_color_dict(filepath):
     colors_file = open(filepath, 'r')
@@ -11,17 +13,32 @@ def get_color_dict(filepath):
     colors_dict = colors_json["colour_dict"]
     return colors_dict
 
-
-def convert_color_grid_to_key_grid(color_array):
-    pass
-
-
 def prompt_open_file():
     root = tkinter.Tk()
+    root.withdraw()
     root.title("Animation Tool")
 
-    file_name = tkinter.filedialog.askopenfilename(
+    file = tkinter.filedialog.askopenfile(
         initialdir="/",
-        title="Select a file",
-        filetypes=("json files", "*.json"),
+        title="Select a file"
     )
+    root.destroy()
+
+    return file
+
+def prompt_save_file():
+    root = tkinter.Tk()
+    root.withdraw()
+    root.title("Animation Tool")
+
+    files = [('All Files', '*.json')]
+
+    file = tkinter.filedialog.asksaveasfile(
+        initialdir=os.path.curdir + "/animation_files",
+        title="Select a file",
+        filetypes=files,
+        defaultextension=files
+    )
+    root.destroy()
+
+    return file

@@ -52,7 +52,7 @@ class Preview:
 
     def play(self):
         if self.thread is None and not self.run:
-            self.playpause_button.events.on_clicked.remove_all_callbacks()
+            clear_event(self.playpause_button.events.on_clicked)
             self.playpause_button.events.on_clicked += self.pause
 
             self.playpause_button.text = 'PAUSE'
@@ -74,7 +74,7 @@ class Preview:
 
     def pause(self):
         if self.thread is not None and self.run:
-            self.playpause_button.events.on_clicked.remove_all_callbacks()
+            clear_event(self.playpause_button.events.on_clicked)
             self.playpause_button.events.on_clicked += self.play
 
             self.run = False

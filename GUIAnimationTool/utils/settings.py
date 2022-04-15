@@ -1,3 +1,4 @@
+from operator import inv
 import pygame
 import os
 from .file_handler import *
@@ -6,17 +7,16 @@ from events import Events
 pygame.init()
 pygame.font.init()
 
-
 # Palette Colors
-COLOR_PALETTE_DICT = get_color_dict(os.path.abspath('../DisplayController/colors.json'))
+KEY_COLOR_DICT = get_color_dict(os.path.abspath('colors.json'))
 
 # Menu Settings
 PADDING = 15
-WHITE = COLOR_PALETTE_DICT["w"]
-BLACK = COLOR_PALETTE_DICT["bk"]
-RED = COLOR_PALETTE_DICT["r"]
-GREEN = COLOR_PALETTE_DICT["g"]
-BLUE = COLOR_PALETTE_DICT['be']
+WHITE = KEY_COLOR_DICT["w"]
+BLACK = KEY_COLOR_DICT["bk"]
+RED = KEY_COLOR_DICT["r"]
+GREEN = KEY_COLOR_DICT["g"]
+BLUE = KEY_COLOR_DICT['be']
 GREY = [100, 100, 100]
 
 # Frame Settings
@@ -63,4 +63,4 @@ Vector2 = namedtuple('Vector2', 'x y')
 # Pygame Settings
 FPS = 60
 WIDTH, HEIGHT = MENU_BAR_WIDTH, \
-                PADDING + MENU_BAR_HEIGHT + PADDING + CANVAS_HEIGHT + PADDING + PREVIEW_HEIGHT + PADDING
+                PADDING + MENU_BAR_HEIGHT + PADDING + CANVAS_HEIGHT + PADDING + PREVIEW_HEIGHT

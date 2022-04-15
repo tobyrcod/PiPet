@@ -12,9 +12,7 @@ class Toolbar:
         button_width = button_height = button_space // TOOLBAR_COLUMNS
         self.color_buttons = []
 
-        print(COLOR_PALETTE_DICT)
-
-        for i, color in enumerate(COLOR_PALETTE_DICT.values()):
+        for i, color in enumerate(KEY_COLOR_DICT.values()):
             button = Button(pygame.Rect(TOOLBAR_PADDING + (i % TOOLBAR_COLUMNS) * (TOOLBAR_PADDING + button_width),
                                         TOOLBAR_PADDING + (i // TOOLBAR_COLUMNS) * (TOOLBAR_PADDING + button_height),
                                         button_width, button_height), color)

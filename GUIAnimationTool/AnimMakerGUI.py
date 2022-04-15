@@ -20,11 +20,11 @@ def main():
             button = toolbar.brush_buttons['Brush']
             button.events.on_clicked(button)
 
-    menu_bar = MenuBar(pygame.Rect(0, 0, MENU_BAR_WIDTH, MENU_BAR_HEIGHT))
     canvas = Canvas(pygame.Rect(PADDING, PADDING + MENU_BAR_HEIGHT, CANVAS_WIDTH, CANVAS_HEIGHT))
     animator = Animator(pygame.Rect(PADDING, PADDING + canvas.rect.bottom, ANIMATOR_WIDTH, ANIMATOR_HEIGHT))
     toolbar = Toolbar(pygame.Rect(canvas.rect.right + PADDING, canvas.rect.top, TOOLBAR_WIDTH, TOOLBAR_HEIGHT))
     preview = Preview(pygame.Rect(animator.rect.right + PADDING, animator.rect.top, PREVIEW_WIDTH, PREVIEW_HEIGHT), animator.timeline)  # TODO: use events for when the frames change instead of passing the whole timeline
+    menu_bar = MenuBar(pygame.Rect(0, 0, MENU_BAR_WIDTH, MENU_BAR_HEIGHT), animator.timeline)
 
     animator.timeline.events.on_active_timeline_frame_index_changed += lambda index: canvas.set_frame(animator.timeline.timeline_frames[index].frame)
     animator.timeline.events.on_timeline_frame_added += lambda tf: preview.go_to_beginning()
