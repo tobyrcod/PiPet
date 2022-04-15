@@ -44,6 +44,12 @@ class Preview:
         fps_value = self.fps_input.value
         self.fps = 1 if fps_value == '' else int(fps_value)
 
+    def set_fps(self, fps):
+        self.fps_input.value = str(fps)
+        self.fps = int(fps)
+        self.fps_input.manager._process_end()
+
+
     def clicked(self, mouse_pos):
         local_pos = np.subtract(mouse_pos, self.rect.topleft)
 

@@ -25,10 +25,14 @@ class MenuBar:
                 return
 
     def load_timeline(self):
-        print('load')
+        file, filename = prompt_open_file()
+
+        if file is not None:
+            anim_data = json.load(file)
+            fps = int(1 / float(anim_data["delay"]))
+            self.preview.set_fps(fps)
 
     def save_timeline(self):
-        print('st')
         file, filename = prompt_save_file()
 
         if file is not None:

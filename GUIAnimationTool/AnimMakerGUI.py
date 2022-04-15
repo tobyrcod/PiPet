@@ -48,7 +48,6 @@ def main():
 
     toolbar.color_buttons[0].events.on_clicked(toolbar.color_buttons[0])
 
-    # Create TextInput-object
     run = True
     while run:
         clock.tick(FPS)
@@ -62,7 +61,7 @@ def main():
                 run = False
                 preview.pause()
 
-            # TODO: make this more elegant (...matrix?)
+            # TODO: make this more elegant
             mouse_pos = pygame.mouse.get_pos()
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:  # if the left mouse button is clicked
                 if menu_bar.rect.collidepoint(mouse_pos):
