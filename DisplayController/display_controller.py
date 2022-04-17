@@ -1,156 +1,167 @@
-import json, random
-from sense_hat import SenseHat #use this when implementing in rasp pi
+import json
+#from sense_hat import SenseHat #use this when implementing in rasp pi
 from time import sleep
+import numpy as np
 
-s = SenseHat()
+#s = SenseHat()
 
-
-# TODO: Design JSON
-# TODO: Load JSON
-# TODO: Turn JSON into instance of face class
-# TODO: Write a Play Face Controller
-
-# We call the physical display the 'display', which we apply different faces too (the animations)
-# (method) of animation = an order in which faces are shown up on the led
-
-# idle animation whist there is no action from the keyboard
-# just start doing object orientied animations
-
-# expansion on it v
-# Finite State Machine to handle which face is currently playing
-
-# Loading the Display Settings
-
-# have 2 keys essentially
-# accessing via name, easy for us, nice to display in the GUI
-# accessing via number, good for drawing out animations
-
-# split it into coloru value and volor name
-# better to do it this way instead of deriving the name of the colour
-#   from a function to translate the rbg value into name of colour (next closest colour)
-#   as this would be v inefficient, and uncessesary when theres this way
-
-#object to store the json animation object
+g = (0, 255, 0)
+o = (255, 165, 0)
+r = (255, 0, 0)
+w = (0, 0, 0)
 
 class Animation:
-    def __init__(self):
-        self.colourVals = []#"" vv
-        self.anim_info = [] #will be an array of dictionaries
+    def __init__(self, _name):
+
+        self.name = _name   #"idle.py" for example
+        self.delay = 0
         self.faces = []
+        
+
+        #array of arrays 
+        #array of frames for the animation
+            #each array then has arrays that represent rows of pixels
+                #each row array has a pixels as elements
 
     #load all aniamtions at the start of a game
-    def load_animations(self, filepath):  #can only load 1 animation at a time - a change in the current animation
-        print("loading colour values...")
-        print("file path = " + filepath)
-
-        file = open(filepath)
+    def load_animations(self):  #can only load 1 animation at a time - a change in the current animation
+        #open correspinding file
+        print("animation file is being loaded") #hopefully this folder navigation works :)
+        #print("./GUIAnimationTool/animation_files/" + self.name)
+        file = open("animation_files/" + self.name) #this is the correct directory
         data = json.load(file)  #data is the array of contents of json file
         print(data)
 
         #########################################
 
-        for colour_info in data["colour_values"]:
-            tempDict = {}
-            tempDict["key"] = colour_info["key"]
-            tempDict["value"] = colour_info["value"]
-            tempDict["name"] = colour_info["name"] 
-            self.colourVals.append(tempDict)
+        self.delay = data["delay"]
+        self.faces = data["faces"] #extracting the info into a bit easier use
+        print(self.faces)
+        # for i in range(len(data["faces"])):
+        #     print(i)
 
-        print(self.colourVals)  #successfully gets the information of each colour stored in json file
-
-        ####################################
-
-        print("loading animation info...")  #extracts all animations 
-        #do we want to only extract the specified aniamtion? yes
-
-        for animation_info in data["animations"]:
-            #if animation_info["name"] == animName:
-            tempDict = {}
-
-            tempDict["name"] = animation_info["name"]
-            tempDict["delay"] = animation_info["delay"]
-            tempDict["reps"] = animation_info["reps"]
-            tempDict["order"] = animation_info["order"]
-
-            self.anim_info.append(tempDict)
-
-
-        print(self.anim_info)    #successfully gets the required animation information
-
-        #####################################
-         
-        for face in data["faces"]:   #extracts all faces
-            self.faces.append(face)
+        # for face in data["faces"]:   #extracts all faces
+        #     print()
+            #self.faces.append(face)
             
-        print(self.faces)   #this all works yay
-
+        #print(self.faces)   
         file.close()
 
+        
+
+        #this part will be when there is not an idle animation going ot be run, so a reaction will
+        for i in range(len(self.faces)): ##############################
+            print(self.faces[i])
+            # s.set_pixels(self.faces[i])
+            # sleep(self.delay)
+
         ####################################
-
-    def reaction(self, animName):
-        #hwo to access the dictionary from the aniamtion name
-
-        print("updating aniamtion")
-        print("new animation == " + animName)
-        print(self.anim_info)
-
-        reaction = ""
-
-        for animation in self.anim_info:
-            if animation["name"] == animName:   #so once found the corresponding animation and its details
-                reaction = animation
-
-        if reaction == "":    #if none were found
-            print("no reaction found")
-            return None
-
-
-        print(reaction)
-
-        #### displaying the animation now we have checked there is such animation
-        delay = reaction["delay"]
-        reps = reaction["reps"]
-        order = reaction["order"]
-
-        sleep(delay)    #just to offset the current display delay
-
-        #so the sense hat is just reading the integers in the array so we need to directly extract/map keys to colours
-
-        activeFrames = []
-        #convert the colour dictionary to rgb arrays in each position in frame
-        #so just do like .replace for each character
-        #for each character replace it with the rgb code etc
-
-        colours = []    #extracting used colours
-        print(self.colourVals)
-
-        for entry in self.colourVals:
-            colours.append([entry["key"], entry["value"]])
-
-        print(colours)
-
-        for face in self.faces:
-            for i in range(len(face)):  #might need to be for i in range face[i]
-                for colour in colours:
-                    if face[i] == colour[0]: #if index value == a key 
-                        face[i] = colour[1]   #replace it with he rgb value
-                        break   #no need to check the other colours :)
-        print(self.faces)
-
-        s.clear()
-            
-
-        for i in range(reps):  #reps = how many times the order is repeated
-            #go through the order however many repetitions there another
-            for index in order:
-
-                s.set_pixels(self.faces[index]) #setting the frame to show up on the pipet
-                sleep(delay) #how long to keep the frame for
-
-        s.clear()
+        
 
     
+class Bar:
+    ##array that holds the health bar value
+    #colours for at what point the bar should be (red for <10, green >90. etc
+    #idle animation
+    
+    def __init__(self, gameLives):  #game lives can be a max of 6! because of pixels, or 8 if it looks better but 6 for now
+
+        self.max = gameLives
+        self.pipetBar = 0
+        self.playerBar = 0 
+
+        self.healthBars = [ #full health bars on both sides
+            [w, w, w, w, w, w, w, w],
+            [g, w, w, w, w, w, w, g],
+            [g, w, w, w, w, w, w, g],
+            [g, w, w, w, w, w, w, g],
+            [g, w, w, w, w, w, w, g],
+            [g, w, w, w, w, w, w, g],
+            [g, w, w, w, w, w, w, g],
+            [w, w, w, w, w, w, w, w]
+        ]
+
+        self.displayToSH()
+        
+        
+    def health_bar_change(self, lossSide, amount, animName):
+        #side param = which side (pipet = L or player = R) the health bar should go down
+        #amount param = by how much this bar should go down by (could be different in various games)
+
+        #there is defo going ot be a way to make all the below pretty much repreatred things into 1 generalised section
+        if lossSide == "L":
+            self.playerBar += amount
+
+            if self.playerBar >= self.max:
+                #END THE GAME SOMEONE HAS WON
+                
+                Animation("pipetwon.pipet").load_animations()
+                
+
+            else:
+                #we can update the display 
+
+                boundary = self.playerBar + 1
+                #the boundary is the position of the first coloured in block
+
+                for i in range(boundary - amount, boundary):    #lowering the bar accordingly
+                    #might need to be boundary -1  ^^
+                    self.healthBars[i][0] = w
+                
+                if boundary > 3 | boundary < 5:
+                    #colour the rest in orange
+                    for i in range(boundary, 6):
+                        self.healthBars[i][0] = o
+
+                elif boundary > 6:
+                    #colour rest in red
+                    for i in range(boundary, 6):
+                        self.healthBars[i][0] = r
+
+        else:
+            self.pipetBar += amount
+
+            if self.pipetBar >= self.max:
+
+                Animation("pipetlost.pipet").load_animations()
+
+            else:
+                boundary = self.playerBar + 1
+                #the boundary is the position of the first coloured in block
+
+                for i in range(boundary - amount, boundary):    #lowering the bar accordingly
+                    #might need to be boundary -1  ^^
+                    self.healthBars[i][7] = w
+                
+                if boundary > 3 | boundary < 5:
+                    #colour the rest in orange
+                    for i in range(boundary, 6):
+                        self.healthBars[i][7] = o
+
+                elif boundary > 6:
+                    #colour rest in red
+                    for i in range(boundary, 6):
+                        self.healthbars[i][7] = r
+
+    
+        a = Animation(animName)
+        a.load_animations()  #with the new animation name as a param, so shock face for example       
+
+        #display the updated health bars for hte game to continue
+        self.displayToSH()
+        
+
+    def displayToSH(self):
+        displayHealthBars = []    #this might be a good thing to have in a separate function
+        for row in self.healthBars:
+            for element in row:
+                displayHealthBars.append(element)
+
+
+        print(displayHealthBars) #####################################
+
+        # s.clear()
+        # s.set_pixels(displayHealthBars)
         
 
 
@@ -158,4 +169,6 @@ class Animation:
 # newAnim.load_animations("animations.json")
 # newAnim.reaction("test1")
 
-   
+#### 
+#i believe evertything works........
+#look at the animation part to see whether that works but it should and then this part should be done///

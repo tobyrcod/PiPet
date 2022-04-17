@@ -1,16 +1,17 @@
 from settings import *
 from state import State
-import stateb
+#import stateb
+
 
 SCORE_COLOUR = (106, 164, 148)
 
 PADDLE_WIDTH, PADDLE_HEIGHT = 20, 100
 BALL_RADIUS = 8
 
-SPRITE_EGG = pygame.image.load('Pong/egg.png').convert_alpha()
-SPRITE_CHICKEN = pygame.image.load('Pong/chicken_paddle.png').convert_alpha()
-SPRITE_BG = pygame.image.load('Pong/bg_grass.png').convert_alpha()
-SPRITE_GRASS = pygame.image.load('Pong/grass.png').convert_alpha()
+SPRITE_EGG = pygame.image.load('Pong/egg.png')#.convert_alpha()
+SPRITE_CHICKEN = pygame.image.load('Pong/chicken_paddle.png')#.convert_alpha()
+SPRITE_BG = pygame.image.load('Pong/bg_grass.png')#.convert_alpha()
+SPRITE_GRASS = pygame.image.load('Pong/grass.png')#.convert_alpha()
 
 SCORE_FONT = COMIC_SANS
 
@@ -163,9 +164,9 @@ class StateC(State):
         self.left_score = 0
         self.right_score = 0
 
-    def EnterState(self):
-        super().EnterState()
-        print("Entering Pong")
+    # def EnterState(self):
+    #     super().EnterState()
+    #     print("Entering Pong")
 
     def Update(self, win, keys):
         super().Update(win, keys)
@@ -184,8 +185,8 @@ class StateC(State):
             self.left_score += 1
             reset(self.ball, self.left_paddle, self.right_paddle)
 
-        if keys[pygame.K_b]:
-            self.fsm.SetState(stateb.StateB(self.fsm))
+        #if keys[pygame.K_b]:
+            #self.fsm.SetState(stateb.StateB(self.fsm))
 
     def ExitState(self):
         super().ExitState()
