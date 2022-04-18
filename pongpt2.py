@@ -1,6 +1,7 @@
 import pygame, sys, random
 import DisplayController.display_controller as funct
 
+
 class Ball:
     def __init__(self):
         self.ball = pygame.Rect(screenWidth / 2 - 15, screenHeight / 2 - 15, 30, 30) #will have many ball.center, ball.x, ball.y etc as properties of the pygame object
@@ -13,12 +14,12 @@ class Ball:
         #which side won the point
         #by how much the point is lost (so by how much the health bar goes down by)
         if pointSide == "L":
-            bar.health_bar_change(pointSide, 1, "piLostPoint.pipet")
+            bar.health_bar_change(pointSide, 1, "pipetlostPoint.pipet")
 
 
         elif pointSide == "R":
             #this is the returning animation
-            bar.health_bar_change(pointSide, 1, "playerLostPoint.pipet")
+            bar.health_bar_change(pointSide, 1, "playerlostPoint.pipet")
             
 
 
@@ -45,6 +46,7 @@ class Sticks:
         
         if self.player.bottom >= screenHeight:
             self.player.bottom = screenHeight
+
 
 
 #outside ball class
@@ -84,7 +86,8 @@ def opponent_ai():     ##so its based on what position the ball is on the screen
         stick.opponent.bottom = screenHeight
 
 
-#general setup
+
+    #general setup
 pygame.init()
 clock = pygame.time.Clock()
 
@@ -112,6 +115,8 @@ stick = Sticks()
 while True:  #only checks whether user has pressed exist button
     #handling input
 
+    
+
     for event in pygame.event.get():        #event is clikc of a button, movement of mouse, etc...
         if event.type == pygame.QUIT:   #pygame.quit is the exit button
             pygame.quit()
@@ -122,6 +127,13 @@ while True:  #only checks whether user has pressed exist button
                 stick.playerSpeed += 7
             if event.key == pygame.K_UP:
                 stick.playerSpeed -= 7
+            if event.key == pygame.K_SPACE:
+                print("space clicked")
+                
+                import menu
+                pygame.quit()
+                sys.exit()
+            
 
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_DOWN:
@@ -129,13 +141,15 @@ while True:  #only checks whether user has pressed exist button
             if event.key == pygame.K_UP:
                 stick.playerSpeed += 7  
 
+        
+
     #game logic
     ball_animation()
     stick.player_animation()
     opponent_ai()
 
     #visuals
-     #visuals
+    #visuals
     screen.fill(bg_colour)  #background colour
     pygame.draw.rect(screen, light_grey, stick.player)    #does it matter whether you use Rect or rect?
     pygame.draw.rect(screen, light_grey, stick.opponent)
@@ -152,3 +166,6 @@ while True:  #only checks whether user has pressed exist button
     #updating window
     pygame.display.flip()
     clock.tick(60)
+
+
+

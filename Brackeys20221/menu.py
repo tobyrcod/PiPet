@@ -1,9 +1,10 @@
 import pygame
-import pongpt2
 import sys
 from state import State
+from pongpt2 import StatePong
 
 
+#this is where the pygame menu interface is going to be
 class MainMenu(State):  #main menu is a state
     def __init__(self, fsm):
         super().__init__(fsm)
@@ -16,7 +17,7 @@ class MainMenu(State):  #main menu is a state
         super().Update(win, keys)
 
         if keys[pygame.K_b]:
-            self.fsm.SetState(pongpt2.StateSnake(self.fsm))
+            self.fsm.SetState(StatePong(self.fsm))
 
     def ExitState(self):
         super().ExitState()

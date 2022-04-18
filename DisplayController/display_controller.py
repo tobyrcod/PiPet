@@ -1,9 +1,10 @@
 import json
-from sense_hat import SenseHat #use this when implementing in rasp pi
+#from sense_hat import SenseHat #use this when implementing in rasp pi
 from time import sleep
 import numpy as np
 
-s = SenseHat()
+
+#s = SenseHat()
 
 g = (0, 255, 0)
 o = (255, 165, 0)
@@ -69,11 +70,11 @@ class Animation:
 
         print(displayFaces) #####################################
 
-        s.clear()
+        #s.clear()
         for i in displayFaces:
-            s.set_pixels(i)
+            #s.set_pixels(i)
             sleep(self.delay)
-        s.clear()
+       # s.clear()
 
         ####################################
         
@@ -114,8 +115,11 @@ class Bar:
 
             if self.playerBar >= self.max:
                 #END THE GAME SOMEONE HAS WON
-                s.clear()
+                #s.clear()
+                
                 Animation("playerlost.pipet").load_animations()
+                import menu
+                
                 
 
             else:
@@ -143,9 +147,11 @@ class Bar:
 
             if self.pipetBar >= self.max:
 
-                s.clear()
+               # s.clear()
 
                 Animation("pipetlost.pipet").load_animations()
+                import menu
+                
 
             else:
                 rboundary = self.pipetBar + 1
@@ -182,8 +188,8 @@ class Bar:
 
         print(displayHealthBars) #####################################
 
-        s.clear()
-        s.set_pixels(displayHealthBars)
+        #s.clear()
+        #s.set_pixels(displayHealthBars)
         
 
 

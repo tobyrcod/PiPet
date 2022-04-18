@@ -5,7 +5,7 @@ pygame.display.set_caption("PiPet")
 from fsm import FSM
 from menu import MainMenu   #main menu is now a state instead of generic name "stateA"
 
-
+#main = the finite state machine
 def main():
     STATE_MACHINE = FSM()
     STATE_MACHINE.SetState(MainMenu(STATE_MACHINE)) #same as above
