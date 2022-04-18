@@ -1,9 +1,9 @@
 import json
-#from sense_hat import SenseHat #use this when implementing in rasp pi
+from sense_hat import SenseHat #use this when implementing in rasp pi
 from time import sleep
 import numpy as np
 
-#s = SenseHat()
+s = SenseHat()
 
 g = (0, 255, 0)
 o = (255, 165, 0)
@@ -28,7 +28,7 @@ class Animation:
         #open correspinding file
         print("animation file is being loaded") #hopefully this folder navigation works :)
         #print("./GUIAnimationTool/animation_files/" + self.name)
-        file = open("animation_files/" + self.name) #this is the correct directory
+        file = open("GUIAnimationTool/animation_files/" + self.name) #this is the correct directory
         data = json.load(file)  #data is the array of contents of json file
         print(data)
 
@@ -49,11 +49,31 @@ class Animation:
 
         
 
-        #this part will be when there is not an idle animation going ot be run, so a reaction will
-        for i in range(len(self.faces)): ##############################
-            print(self.faces[i])
-            # s.set_pixels(self.faces[i])
-            # sleep(self.delay)
+       
+        # for i in range(len(self.faces)): ##############################
+        #     print(self.faces[i])
+             
+        #     s.set_pixels(self.faces[i])
+        #     sleep(self.delay)
+
+
+        displayFaces = []    #this might be a good thing to have in a separate function
+        for face in self.faces:
+            temp = []
+            for row in face:
+                for element in row:
+                    temp.append(element)
+            
+            displayFaces.append(temp)
+
+
+        print(displayFaces) #####################################
+
+        s.clear()
+        for i in displayFaces:
+            s.set_pixels(i)
+            sleep(self.delay)
+        s.clear()
 
         ####################################
         
@@ -89,33 +109,33 @@ class Bar:
         #amount param = by how much this bar should go down by (could be different in various games)
 
         #there is defo going ot be a way to make all the below pretty much repreatred things into 1 generalised section
-        if lossSide == "L":
+        if lossSide == "R":
             self.playerBar += amount
 
             if self.playerBar >= self.max:
                 #END THE GAME SOMEONE HAS WON
-                
-                Animation("pipetwon.pipet").load_animations()
+                s.clear()
+                Animation("playerlost.pipet").load_animations()
                 
 
             else:
                 #we can update the display 
 
-                boundary = self.playerBar + 1
+                lboundary = self.playerBar + 1
                 #the boundary is the position of the first coloured in block
 
-                for i in range(boundary - amount, boundary):    #lowering the bar accordingly
+                for i in range(lboundary - amount, lboundary):    #lowering the bar accordingly
                     #might need to be boundary -1  ^^
                     self.healthBars[i][0] = w
                 
-                if boundary > 3 | boundary < 5:
+                if lboundary > 3 and lboundary < 5:
                     #colour the rest in orange
-                    for i in range(boundary, 6):
+                    for i in range(lboundary, 7):
                         self.healthBars[i][0] = o
 
-                elif boundary > 6:
+                elif lboundary == 5:
                     #colour rest in red
-                    for i in range(boundary, 6):
+                    for i in range(lboundary, 7):
                         self.healthBars[i][0] = r
 
         else:
@@ -123,25 +143,27 @@ class Bar:
 
             if self.pipetBar >= self.max:
 
+                s.clear()
+
                 Animation("pipetlost.pipet").load_animations()
 
             else:
-                boundary = self.playerBar + 1
+                rboundary = self.pipetBar + 1
                 #the boundary is the position of the first coloured in block
 
-                for i in range(boundary - amount, boundary):    #lowering the bar accordingly
+                for i in range(rboundary - amount, rboundary):    #lowering the bar accordingly
                     #might need to be boundary -1  ^^
                     self.healthBars[i][7] = w
                 
-                if boundary > 3 | boundary < 5:
+                if rboundary > 3 and rboundary < 5:
                     #colour the rest in orange
-                    for i in range(boundary, 6):
+                    for i in range(rboundary, 7):
                         self.healthBars[i][7] = o
 
-                elif boundary > 6:
+                elif rboundary == 5:
                     #colour rest in red
-                    for i in range(boundary, 6):
-                        self.healthbars[i][7] = r
+                    for i in range(rboundary, 7):
+                        self.healthBars[i][7] = r
 
     
         a = Animation(animName)
@@ -160,8 +182,8 @@ class Bar:
 
         print(displayHealthBars) #####################################
 
-        # s.clear()
-        # s.set_pixels(displayHealthBars)
+        s.clear()
+        s.set_pixels(displayHealthBars)
         
 
 
