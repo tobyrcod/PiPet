@@ -191,6 +191,4 @@ class Bar:
 # newAnim.load_animations("animations.json")
 # newAnim.reaction("test1")
 
-#### 
-#i believe evertything works........
-#look at the animation part to see whether that works but it should and then this part should be done///
+###

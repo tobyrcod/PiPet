@@ -13,12 +13,12 @@ class Ball:
         #which side won the point
         #by how much the point is lost (so by how much the health bar goes down by)
         if pointSide == "L":
-            bar.health_bar_change(pointSide, 1, "idle_healthBar.pipet")
+            bar.health_bar_change(pointSide, 1, "piLostPoint.pipet")
 
 
         elif pointSide == "R":
             #this is the returning animation
-            bar.health_bar_change(pointSide, 1, "idle_healthBar.pipet")
+            bar.health_bar_change(pointSide, 1, "playerLostPoint.pipet")
             
 
 
