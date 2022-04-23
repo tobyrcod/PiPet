@@ -1,10 +1,11 @@
 import json
-#from sense_hat import SenseHat #use this when implementing in rasp pi
+from sense_hat import SenseHat #use this when implementing in rasp pi
 from time import sleep
+import sys
 import numpy as np
 
 
-#s = SenseHat()
+s = SenseHat()
 
 g = (0, 255, 0)
 o = (255, 165, 0)
@@ -17,7 +18,6 @@ class Animation:
         self.name = _name   #"idle.py" for example
         self.delay = 0
         self.faces = []
-        
 
         #array of arrays 
         #array of frames for the animation
@@ -37,26 +37,9 @@ class Animation:
 
         self.delay = data["delay"]
         self.faces = data["faces"] #extracting the info into a bit easier use
-        print(self.faces)
-        # for i in range(len(data["faces"])):
-        #     print(i)
-
-        # for face in data["faces"]:   #extracts all faces
-        #     print()
-            #self.faces.append(face)
-            
-        #print(self.faces)   
+        #print(self.faces)
+    
         file.close()
-
-        
-
-       
-        # for i in range(len(self.faces)): ##############################
-        #     print(self.faces[i])
-             
-        #     s.set_pixels(self.faces[i])
-        #     sleep(self.delay)
-
 
         displayFaces = []    #this might be a good thing to have in a separate function
         for face in self.faces:
@@ -67,17 +50,15 @@ class Animation:
             
             displayFaces.append(temp)
 
-
-        print(displayFaces) #####################################
+        #print(displayFaces) #####################################
 
         #s.clear()
         for i in displayFaces:
-            #s.set_pixels(i)
+            s.set_pixels(i)
             sleep(self.delay)
-       # s.clear()
+        s.clear()
 
         ####################################
-        
 
     
 class Bar:
@@ -113,14 +94,18 @@ class Bar:
         if lossSide == "R":
             self.playerBar += amount
 
-            if self.playerBar >= self.max:
+
+            if self.playerBar >= 2:#self.max:
                 #END THE GAME SOMEONE HAS WON
-                #s.clear()
+                s.clear()
                 
+                #print(self.playerBar + " >= " + self.max)
+
                 Animation("playerlost.pipet").load_animations()
+                
                 import menu
-                
-                
+                sys.modules.pop("menu")
+                    
 
             else:
                 #we can update the display 
@@ -145,12 +130,14 @@ class Bar:
         else:
             self.pipetBar += amount
 
-            if self.pipetBar >= self.max:
+            if self.pipetBar >= 2:#self.max:
 
-               # s.clear()
-
+                s.clear()
+                #print(self.pipetBar + " >= " + self.max)
                 Animation("pipetlost.pipet").load_animations()
+                
                 import menu
+                sys.modules.pop("menu")
                 
 
             else:
@@ -185,16 +172,9 @@ class Bar:
             for element in row:
                 displayHealthBars.append(element)
 
-
-        print(displayHealthBars) #####################################
-
-        #s.clear()
-        #s.set_pixels(displayHealthBars)
+        #print(displayHealthBars) #####################################
+        
+        s.clear()
+        s.set_pixels(displayHealthBars)
         
 
-
-# newAnim = Animation()
-# newAnim.load_animations("animations.json")
-# newAnim.reaction("test1")
-
-###

@@ -48,7 +48,6 @@ class Sticks:
             self.player.bottom = screenHeight
 
 
-
 #outside ball class
 def ball_animation():
     
@@ -131,8 +130,9 @@ while True:  #only checks whether user has pressed exist button
                 print("space clicked")
                 
                 import menu
-                pygame.quit()
-                sys.exit()
+                sys.modules.pop("menu")
+                # pygame.quit()
+                # sys.exit()
             
 
         if event.type == pygame.KEYUP:

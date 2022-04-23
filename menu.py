@@ -45,7 +45,9 @@ def get_font(size):
 
 def play(): #the play button 
     pygame.display.set_caption("Play")  #this needs to run pong
-    import pongpt2 as pong
+    import pongpt2
+    sys.modules.pop("pongpt2")
+    
     
 
     #while True:
@@ -108,6 +110,7 @@ def main_menu(): #main menu screen
         for event in pygame.event.get():    #clicking the x on the window
             if event.type == pygame.QUIT:   
                 pygame.quit()
+                sys.exit()
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if PLAY_BUTTON.checkForInput(MENU_MOUSE_POS):
